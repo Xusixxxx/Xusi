@@ -19,11 +19,13 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"xusi-projects/xusi-framework/core/logger"
 	"xusi-projects/xusi-framework/core/util"
 	"xusi-projects/xusi-framework/xweb/context"
 	"xusi-projects/xusi-framework/xweb/httplib"
 	"xusi-projects/xusi-framework/xweb/router"
+	"xusi-projects/xusi-framework/xweb/static"
 )
 
 var xrouterInstance xrouter
@@ -53,7 +55,8 @@ func registryRouters() {
 					*http.Request
 					http.ResponseWriter
 				}{request, responseWriter},
-				StatusCode: httplib.CODE_200,
+				StatusCode:   httplib.CODE_200,
+				RouterParams: map[string]string{},
 			}
 			// 执行全局处理函数
 			rHandler := &requestHandler{ctx, ""}
@@ -61,9 +64,29 @@ func registryRouters() {
 			// 如果在全局处理函数检测完毕后状态码仍是200，那么执行路由处理函数
 			if ctx.StatusCode == httplib.CODE_200 {
 				logger.Debug("run route handler -> ", item.Function)
+				// 解析路由参数
+				// 如果包含了真实路径 + "/" 则代表有携带参数
+				if strings.Contains(util.UrlDecoder(request.URL.String()), rHandler.realRoute+"/") {
+					// 取出参数
+					params := strings.Split(strings.ReplaceAll(util.UrlDecoder(request.URL.String()), rHandler.realRoute+"/", ""), "/")
+					for key, value := range xrouterInstance.routerTable.Table[rHandler.realRoute].Params {
+						index, err := strconv.Atoi(value[0])
+						if err != nil {
+							logger.Error(err)
+							continue
+						}
+						ctx.RouterParams[key] = params[index]
+					}
+				}
+				// 执行路由函数
 				xrouterInstance.routerTable.Table[rHandler.realRoute].Function(ctx)
 			} else {
-				ctx.Http.ResponseWriter.Write([]byte("xusi failed request : " + strconv.Itoa(ctx.StatusCode)))
+				switch ctx.StatusCode {
+				case httplib.CODE_404:
+					ctx.Http.ResponseWriter.Write([]byte(static.PAGE_404))
+				case httplib.CODE_500:
+					ctx.Http.ResponseWriter.Write([]byte(static.PAGE_500))
+				}
 			}
 			// 请求结果打印
 			// 打印请求结果

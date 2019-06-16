@@ -17,11 +17,16 @@ package api
 import (
 	"xusi-projects/xusi-framework/xweb"
 	"xusi-projects/xusi-framework/xweb/context"
+	"xusi-projects/xusi-framework/xweb/static"
 )
 
 func init() {
+	xweb.Get("/", func(ctx *context.Context) {
+		ctx.WirteString(static.PAGE_WELCOME)
+	})
+
 	xweb.Get("/hello/{id}/{name}", func(ctx *context.Context) {
-		ctx.WirteString("ces")
+		ctx.WirteString("hello, [" + ctx.RouterParams["id"] + "]" + ctx.RouterParams["name"] + "!")
 	})
 
 	xweb.Get("/hello1", func(ctx *context.Context) {

@@ -26,7 +26,7 @@ type Context struct {
 	}
 	// diy属性
 	StatusCode   int               // 状态码
-	routerParams map[string]string // 路由参数，存在于url之中
+	RouterParams map[string]string // 路由参数，存在于url之中
 }
 
 // 将字符串写入响应体

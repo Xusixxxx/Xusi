@@ -38,7 +38,7 @@ func (r *requestHandler) serveHTTP(responseWriter http.ResponseWriter, request *
 	// 解析url，避免被拒
 	key := util.UrlDecoder(request.URL.String())
 	// 如果末尾有斜杠，则移除
-	if string([]byte(key)[len(key)-1]) == "/" {
+	if string([]byte(key)[len(key)-1]) == "/" && key != "/" {
 		key = string([]byte(key)[0 : len(key)-1])
 	}
 	// 是否为携带参数

@@ -25,6 +25,7 @@ import (
 	"xusi-projects/xusi-framework/core/util"
 	"xusi-projects/xusi-framework/xweb/context"
 	"xusi-projects/xusi-framework/xweb/httplib"
+	"xusi-projects/xusi-framework/xweb/static"
 )
 
 // 路由表
@@ -64,7 +65,7 @@ func CreateRouterTable() RouterTable {
 		},
 		Pattern: "/",
 		Function: func(ctx *context.Context) {
-			ctx.WirteString("Welcome Xusi!")
+			ctx.WirteString(static.PAGE_WELCOME)
 		},
 		Exclude: "",
 		Params:  map[string][]string{},
@@ -81,7 +82,7 @@ func (routerTable RouterTable) Add(patternTemp string, method []string, function
 		pattern = "/" + pattern
 	}
 	// 如果末尾为“/”则移除
-	if string([]byte(pattern)[len(pattern)-1]) == "/" {
+	if string([]byte(pattern)[len(pattern)-1]) == "/" && pattern != "/" {
 		pattern = string([]byte(pattern)[0 : len(pattern)-1])
 	}
 	// 如果为“\”则替换为“/”
@@ -94,6 +95,10 @@ func (routerTable RouterTable) Add(patternTemp string, method []string, function
 	// 移除首个空切片
 	slice = slice[1:len(slice)]
 	params := ""
+	// 如果路由为“/”则直接添加
+	if pattern == "/" {
+		goto Jump
+	}
 	pattern = ""
 	for _, v := range slice {
 		// 如果存在空段，则表示存在 “//”
@@ -129,6 +134,8 @@ func (routerTable RouterTable) Add(patternTemp string, method []string, function
 	if (len(params) > len(params)-1) && len(params) != 0 {
 		params = string([]byte(params)[0 : len(params)-1])
 	}
+	// 路由为"/"
+Jump:
 	// 遍历所有支持的方法，打印Debug日志
 	for _, value := range method {
 		logger.Debug(fmt.Sprintf("router <- %7s %s%s%s", value, logger.YellowBg, pattern, logger.Reset))
