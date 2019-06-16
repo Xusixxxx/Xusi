@@ -1,4 +1,4 @@
-# ⚡️Xusi General Development Suite
+# ⚡️Xusi General Development Suite : v1.0.0 Alpha(α)
 
 Xusi 是一个新开始的项目，没有准备开始任何商业使用。就如她的名字一样，我们会尝试将她打造成一个通用的开发套件。
 
