@@ -12,7 +12,7 @@
 4、实现了xusi通用的初步版本logger；
 5、将xusi-projests在GitHub开源；
 6、完成了README.md文档的构建；
-7、xweb的context基本功能实现；
+7、xweb的context基本功能实现。
 ```
 ****
 
