@@ -20,6 +20,7 @@ import (
 	"net/http"
 	"strconv"
 	"xusi-projects/xusi-framework/core/logger"
+	"xusi-projects/xusi-framework/core/util"
 	"xusi-projects/xusi-framework/xweb/context"
 	"xusi-projects/xusi-framework/xweb/httplib"
 	"xusi-projects/xusi-framework/xweb/router"
@@ -55,12 +56,12 @@ func registryRouters() {
 				StatusCode: httplib.CODE_200,
 			}
 			// 执行全局处理函数
-			rHandler := &requestHandler{ctx}
+			rHandler := &requestHandler{ctx, ""}
 			rHandler.serveHTTP(responseWriter, request)
 			// 如果在全局处理函数检测完毕后状态码仍是200，那么执行路由处理函数
 			if ctx.StatusCode == httplib.CODE_200 {
 				logger.Debug("run route handler -> ", item.Function)
-				item.Function(ctx)
+				xrouterInstance.routerTable.Table[rHandler.realRoute].Function(ctx)
 			} else {
 				ctx.Http.ResponseWriter.Write([]byte("xusi failed request : " + strconv.Itoa(ctx.StatusCode)))
 			}
@@ -79,7 +80,7 @@ func registryRouters() {
 				logger.MagentaBg, request.Method, logger.Reset,
 				statusColor, strconv.Itoa(ctx.StatusCode), logger.Reset,
 				logger.Yellow, request.Host, logger.Reset,
-				logger.Blue, request.URL.String(), logger.Reset,
+				logger.Blue, util.UrlDecoder(request.URL.String()), logger.Reset,
 			)
 
 			// 如果为dev模式，输出请求详细
@@ -102,8 +103,9 @@ func registryRouters() {
 				)
 			}
 		})
-		logger.Debug(fmt.Sprintf("router registry <- %s%s%s", logger.YellowBg, item.Pattern, logger.Reset))
-
+		if item.Pattern != "/" {
+			logger.Debug(fmt.Sprintf("router registry <- %s%s%s", logger.YellowBg, item.Pattern, logger.Reset))
+		}
 	}
 }
 

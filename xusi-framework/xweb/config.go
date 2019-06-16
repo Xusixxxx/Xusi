@@ -26,7 +26,7 @@ func init() {
 	conf = config{
 		network: httplib.NETWORK_TCP4,
 		address: httplib.DEFAULT_ADDRESS,
-		mode:    httplib.RUNMODE_DEV,
+		mode:    httplib.RUNMODE_PROD,
 	}
 }
 

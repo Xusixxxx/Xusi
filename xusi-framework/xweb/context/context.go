@@ -25,7 +25,8 @@ type Context struct {
 		http.ResponseWriter
 	}
 	// diy属性
-	StatusCode int // 状态码
+	StatusCode   int               // 状态码
+	routerParams map[string]string // 路由参数，存在于url之中
 }
 
 // 将字符串写入响应体
