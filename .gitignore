@@ -1,0 +1,22 @@
+# Created by .ignore support plugin (hsz.mobi)
+
+# IntelliJ 项目文件
+.idea
+.idea/*.xml
+.idea/vcs.xml
+.idea/workspace.xml
+*.iml
+out
+gen
+# 程序和插件的二进制文件
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# 测试文件
+*.test
+
+# 输出文件
+*.out
