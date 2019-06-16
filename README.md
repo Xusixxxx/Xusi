@@ -1,4 +1,4 @@
-# ⚡️Xusi General Development Suite
+# ⚡️Xusi General Development Suite : v1.0.0 Alpha(α)
 
 Xusi 是一个新开始的项目，没有准备开始任何商业使用。就如她的名字一样，我们会尝试将她打造成一个通用的开发套件。
 
@@ -13,6 +13,10 @@ Xusi 是一个新开始的项目，没有准备开始任何商业使用。就如
  - Email：xusixxxx@gmail.com
  - Wechat：L-i6ong
  - Tencent QQ：2297612526
+ 
+ ### 更新日志
+ - [Gitee](https://gitee.com/xusixxxx/Xusi/blob/master/UpdateLog.md)
+ - [GitHub](https://github.com/xusixxxx/Xusi/blob/master/UpdateLog.md)
  
  # 安装
 请确保安装 [Go Programming Language](https://golang.org/dl/)

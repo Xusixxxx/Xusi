@@ -12,28 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package api
+// context解析
+package context
 
-import (
-	"xusi-projects/xusi-framework/xweb"
-	"xusi-projects/xusi-framework/xweb/context"
-	"xusi-projects/xusi-framework/xweb/static"
-)
+func (ctx Context) f() {
 
-func init() {
-	xweb.Get("/", func(ctx *context.Context) {
-		ctx.WirteString(static.PAGE_WELCOME)
-	})
-
-	xweb.Get("/hello/{id}/{name}", func(ctx *context.Context) {
-		ctx.WirteString("hello, [" + ctx.RouterParams["id"] + "]" + ctx.RouterParams["name"] + "!")
-	})
-
-	xweb.Get("/hello1", func(ctx *context.Context) {
-		ctx.WirteString("ces1")
-	})
-
-	xweb.Get("/hello2", func(ctx *context.Context) {
-		ctx.WirteString("ces2")
-	})
 }

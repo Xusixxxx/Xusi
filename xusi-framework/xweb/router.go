@@ -19,10 +19,13 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"xusi-projects/xusi-framework/core/logger"
+	"xusi-projects/xusi-framework/core/util"
 	"xusi-projects/xusi-framework/xweb/context"
 	"xusi-projects/xusi-framework/xweb/httplib"
 	"xusi-projects/xusi-framework/xweb/router"
+	"xusi-projects/xusi-framework/xweb/static"
 )
 
 var xrouterInstance xrouter
@@ -52,17 +55,38 @@ func registryRouters() {
 					*http.Request
 					http.ResponseWriter
 				}{request, responseWriter},
-				StatusCode: httplib.CODE_200,
+				StatusCode:   httplib.CODE_200,
+				RouterParams: map[string]string{},
 			}
 			// 执行全局处理函数
-			rHandler := &requestHandler{ctx}
+			rHandler := &requestHandler{ctx, ""}
 			rHandler.serveHTTP(responseWriter, request)
 			// 如果在全局处理函数检测完毕后状态码仍是200，那么执行路由处理函数
 			if ctx.StatusCode == httplib.CODE_200 {
 				logger.Debug("run route handler -> ", item.Function)
-				item.Function(ctx)
+				// 解析路由参数
+				// 如果包含了真实路径 + "/" 则代表有携带参数
+				if strings.Contains(util.UrlDecoder(request.URL.String()), rHandler.realRoute+"/") {
+					// 取出参数
+					params := strings.Split(strings.ReplaceAll(util.UrlDecoder(request.URL.String()), rHandler.realRoute+"/", ""), "/")
+					for key, value := range xrouterInstance.routerTable.Table[rHandler.realRoute].Params {
+						index, err := strconv.Atoi(value[0])
+						if err != nil {
+							logger.Error(err)
+							continue
+						}
+						ctx.RouterParams[key] = params[index]
+					}
+				}
+				// 执行路由函数
+				xrouterInstance.routerTable.Table[rHandler.realRoute].Function(ctx)
 			} else {
-				ctx.Http.ResponseWriter.Write([]byte("xusi failed request : " + strconv.Itoa(ctx.StatusCode)))
+				switch ctx.StatusCode {
+				case httplib.CODE_404:
+					ctx.Http.ResponseWriter.Write([]byte(static.PAGE_404))
+				case httplib.CODE_500:
+					ctx.Http.ResponseWriter.Write([]byte(static.PAGE_500))
+				}
 			}
 			// 请求结果打印
 			// 打印请求结果
@@ -79,14 +103,42 @@ func registryRouters() {
 				logger.MagentaBg, request.Method, logger.Reset,
 				statusColor, strconv.Itoa(ctx.StatusCode), logger.Reset,
 				logger.Yellow, request.Host, logger.Reset,
-				logger.Blue, request.URL.String(), logger.Reset,
+				logger.Blue, util.UrlDecoder(request.URL.String()), logger.Reset,
 			)
+
+			// 如果为dev模式，输出请求详细
+			if conf.mode == httplib.RUNMODE_DEV {
+				var headerInfo, fromInfo string
+				if len(request.Header) > 0 {
+					for k, v := range request.Header {
+						headerInfo += "\t" + k + " = " + v[0] + "\n"
+					}
+				}
+				request.ParseForm()
+				if len(request.Form) > 0 {
+					for k, v := range request.Form {
+						fromInfo += "\t" + k + " = " + v[0] + "\n"
+					}
+				}
+				logger.Debug(
+					logger.Yellow, "xusi http request info :\nHeader >>\n"+headerInfo, logger.Reset,
+					logger.Yellow, "\nFrom >>\n"+fromInfo, logger.Reset,
+				)
+			}
 		})
-		logger.Debug(fmt.Sprintf("router registry <- %s%s%s", logger.YellowBg, item.Pattern, logger.Reset))
+		if item.Pattern != "/" {
+			logger.Debug(fmt.Sprintf("router registry <- %s%s%s", logger.YellowBg, item.Pattern, logger.Reset))
+		}
 	}
 }
 
 // 实现接口
+/*
+	/xusi
+	/xusi?a=1
+	/xusi/{id}
+	/xusi/{id}/{name}
+*/
 type routerImplement interface {
 	// 特定类型添加路由
 	Add(pattern string, method []string, function func(ctx *context.Context))
