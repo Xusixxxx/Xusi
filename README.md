@@ -10,7 +10,7 @@ Xusi 是一个新开始的项目，没有准备开始任何商业使用。就如
  
  如果您希望联系到我，下面会是能够最快捷联系到我们的联系方式💖：
 
- - Email：xusixxxx@gmail.com 
+ - Email：xusixxxx@gmail.com
  - Wechat：L-i6ong
  - Tencent QQ：2297612526
  
