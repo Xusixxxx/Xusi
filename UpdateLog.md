@@ -1,5 +1,7 @@
 # ⚡️Xusi General Development Suite : 更新日志
 
+ <a href="https://github.com/Xusixxxx/Xusi"><img align="center" style="margin-right:20px;" src="https://s2.ax1x.com/2019/06/16/VTbJ1S.png" title="logo created by @xusixxxx" /></a>
+
 该项目的完整的更新进程
 - 修订：Xusixxxx
 ****
