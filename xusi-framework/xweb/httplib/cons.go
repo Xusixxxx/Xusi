@@ -19,6 +19,10 @@ const (
 	// 默认参数
 	DEFAULT_ADDRESS = "8080"
 
+	// 运行模式
+	RUNMODE_PROD = "prod"
+	RUNMODE_DEV  = "dev"
+
 	// 网络类型
 	NETWORK_TCP        = "tcp"
 	NETWORK_TCP4       = "tcp4"

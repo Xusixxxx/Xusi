@@ -40,6 +40,7 @@ type RouterTableItem struct {
 	Pattern  string                     // 映射的地址
 	Function func(ctx *context.Context) // 路由处理的函数
 	Exclude  string                     // 被排除的方法链串
+	Params   []string                   // 路由中携带的参数
 }
 
 // 创建一个路由表
@@ -50,10 +51,31 @@ func CreateRouterTable() RouterTable {
 }
 
 // 添加项(允许包含http协议外的method)
-func (routerTable RouterTable) Add(pattern string, method []string, function func(ctx *context.Context)) {
+func (routerTable RouterTable) Add(patternTemp string, method []string, function func(ctx *context.Context)) {
+	// copy
+	pattern := patternTemp
+	// 如果开头没有“/”则自动补上
+	if string([]byte(pattern)[0]) != "/" {
+		pattern = "/" + pattern
+	}
+	// 如果末尾为“/”则移除
+	if string([]byte(pattern)[len(pattern)-1]) == "/" {
+		pattern = string([]byte(pattern)[0 : len(pattern)-1])
+	}
+	// 如果为“\”则替换为“/”
+	pattern = strings.ReplaceAll(pattern, "\\", "/")
+	// 如果有多余空格移除
+	pattern = strings.ReplaceAll(pattern, " ", "")
+
+	//		/hello/{id}/{name}
+	//		/hello/{id}/{name}/xusi/{age}
+
+	// 遍历所有支持的方法，打印Debug日志
 	for _, value := range method {
 		logger.Debug(fmt.Sprintf("router <- %7s %s%s%s", value, logger.YellowBg, pattern, logger.Reset))
 	}
+	// 读写锁加锁
+	// 之后添加路由项
 	routerTable.RLock()
 	defer routerTable.RUnlock()
 	routerTable.Table[pattern] = RouterTableItem{

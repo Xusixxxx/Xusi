@@ -12,26 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// xweb 配置文件
-// application的执行需要依靠config
-package xweb
+package util
 
 import (
-	"xusi-projects/xusi-framework/xweb/httplib"
+	"net/url"
+	"xusi-projects/xusi-framework/core/logger"
 )
 
-var conf config
-
-func init() {
-	conf = config{
-		network: httplib.NETWORK_TCP4,
-		address: httplib.DEFAULT_ADDRESS,
-		mode:    httplib.RUNMODE_DEV,
-	}
+// URL编码
+func UrlEncoder(content string) string {
+	return url.QueryEscape(content)
 }
 
-type config struct {
-	network string // 使用网络类型
-	address string // 监听的地址
-	mode    string // 运行模式
+// URL解码
+func UrlDecoder(content string) string {
+	result, err := url.QueryUnescape(content)
+	if err != nil {
+		logger.Error(err)
+	}
+	return result
 }

@@ -20,15 +20,15 @@ import (
 )
 
 func init() {
-	xweb.Post("/hello", func(ctx *context.Context) {
-		ctx.Write("ces")
+	xweb.Get("/hello/{id}/{name}", func(ctx *context.Context) {
+		ctx.WirteString("ces")
 	})
 
 	xweb.Get("/hello1", func(ctx *context.Context) {
-		ctx.Write("ces1")
+		ctx.WirteString("ces1")
 	})
 
 	xweb.Get("/hello2", func(ctx *context.Context) {
-		ctx.Write("ces2")
+		ctx.WirteString("ces2")
 	})
 }

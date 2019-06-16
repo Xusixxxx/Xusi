@@ -14,23 +14,32 @@
 
 package context
 
-import "net/http"
+import (
+	"net/http"
+	"net/url"
+)
 
 type Context struct {
 	Http struct {
 		*http.Request
 		http.ResponseWriter
 	}
+	// diy属性
 	StatusCode int // 状态码
 }
 
-// 输出字符串
-func (context Context) Write(str string) {
-	context.Http.ResponseWriter.WriteHeader(context.StatusCode)
-	context.Http.ResponseWriter.Write([]byte(str))
+// 将字符串写入响应体
+// 发送响应体及状态码
+func (ctx Context) WirteString(content string) {
+	ctx.Http.ResponseWriter.Write([]byte(content))
 }
 
-// 输出字符串
-func (context Context) WriteByte(byte []byte) {
-	context.Http.ResponseWriter.Write(byte)
+// 获取头部
+func (ctx Context) GetHeader() http.Header {
+	return ctx.Http.Request.Header
+}
+
+// 获取表单
+func (ctx Context) GetFrom() url.Values {
+	return ctx.Http.Request.Form
 }

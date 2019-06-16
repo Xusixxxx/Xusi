@@ -81,12 +81,39 @@ func registryRouters() {
 				logger.Yellow, request.Host, logger.Reset,
 				logger.Blue, request.URL.String(), logger.Reset,
 			)
+
+			// 如果为dev模式，输出请求详细
+			if conf.mode == httplib.RUNMODE_DEV {
+				var headerInfo, fromInfo string
+				if len(request.Header) > 0 {
+					for k, v := range request.Header {
+						headerInfo += "\t" + k + " = " + v[0] + "\n"
+					}
+				}
+				request.ParseForm()
+				if len(request.Form) > 0 {
+					for k, v := range request.Form {
+						fromInfo += "\t" + k + " = " + v[0] + "\n"
+					}
+				}
+				logger.Debug(
+					logger.Yellow, "xusi http request info :\nHeader >>\n"+headerInfo, logger.Reset,
+					logger.Yellow, "\nFrom >>\n"+fromInfo, logger.Reset,
+				)
+			}
 		})
 		logger.Debug(fmt.Sprintf("router registry <- %s%s%s", logger.YellowBg, item.Pattern, logger.Reset))
+
 	}
 }
 
 // 实现接口
+/*
+	/xusi
+	/xusi?a=1
+	/xusi/{id}
+	/xusi/{id}/{name}
+*/
 type routerImplement interface {
 	// 特定类型添加路由
 	Add(pattern string, method []string, function func(ctx *context.Context))
