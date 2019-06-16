@@ -14,7 +14,10 @@
 4、实现了xusi通用的初步版本logger；
 5、将xusi-projests在GitHub开源；
 6、完成了README.md文档的构建；
-7、xweb的context基本功能实现。
+7、xweb的context基本功能实现；
+8、解决了"/"路由无法注册的BUG；
+9、新增默认404、500、Welcome页面；
+10、完成了路由参数的提取功能。
 ```
 ****
 
