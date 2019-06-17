@@ -80,3 +80,8 @@ func All(pattern string, function func(ctx *context.Context)) {
 		httplib.METHOD_TRACE,
 	}, function)
 }
+
+// 设置运行模式
+func SetRunMode(mode string) {
+	conf.mode = mode
+}

@@ -13,3 +13,15 @@
 // limitations under the License.
 
 package logger
+
+var Conf loggerConfigurator
+
+func init() {
+	Conf = loggerConfigurator{
+		Mode: MODE_DEV,
+	}
+}
+
+type loggerConfigurator struct {
+	Mode string // 运行环境
+}

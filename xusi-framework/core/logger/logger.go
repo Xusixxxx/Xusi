@@ -23,18 +23,34 @@ import (
 	"time"
 )
 
+/* XusiFunc ->
+    @describe 输出Info日志
+    @param a ...interface{} 输出的内容
+<- End */
 func Info(a ...interface{}) {
 	format(LEVEL_INFO, a)
 }
 
+/* XusiFunc ->
+    @describe 输出Warn日志
+    @param a ...interface{} 输出的内容
+<- End */
 func Warn(a ...interface{}) {
 	format(LEVEL_WARN, a)
 }
 
+/* XusiFunc ->
+    @describe 输出Debug日志
+    @param a ...interface{} 输出的内容
+<- End */
 func Debug(a ...interface{}) {
 	format(LEVEL_DEBUG, a)
 }
 
+/* XusiFunc ->
+    @describe 输出Error日志
+    @param a ...interface{} 输出的内容
+<- End */
 func Error(a ...interface{}) {
 	format(LEVEL_ERROR, a)
 	var buf [2 << 10]byte
@@ -48,6 +64,10 @@ func Error(a ...interface{}) {
 	fmt.Print(Red, result, Reset)
 }
 
+/* XusiFunc ->
+    @describe 输出Fatal日志
+    @param a ...interface{} 输出的内容
+<- End */
 func Fatal(a ...interface{}) {
 	format(LEVEL_FATAL, a)
 	var buf [2 << 10]byte
@@ -61,6 +81,10 @@ func Fatal(a ...interface{}) {
 	fmt.Print(Red, result, Reset)
 }
 
+/* XusiFunc ->
+    @describe 输出Trace日志
+    @param a ...interface{} 输出的内容
+<- End */
 func Trace(a ...interface{}) {
 	format(LEVEL_TRACE, a)
 }
@@ -78,49 +102,118 @@ func format(lv string, a ...interface{}) {
 	switch lv {
 	case LEVEL_TRACE:
 		lvColor = Cyan
-		fmt.Print(
-			Green, date.Format("15:04:05:213"), Reset, " ",
-			pid, Reset, " ",
-			lvColor, level, Reset, "\t")
+		if Conf.Mode == MODE_DEV {
+			fmt.Print(
+				Green, date.Format("15:04:05:213"), Reset, " ",
+				pid, Reset, " ",
+				lvColor, level, Reset, "\t")
+		} else {
+			fmt.Print(
+				date.Format("15:04:05:213"), " ",
+				pid, " ",
+				level, "\t")
+		}
 	case LEVEL_FATAL:
 		lvColor = Red
-		fmt.Print(
-			Green, date.Format("15:04:05:213"), Reset, " ",
-			pid, Reset, " ",
-			lvColor, level, Reset, "\t")
+		if Conf.Mode == MODE_DEV {
+			fmt.Print(
+				date.Format("15:04:05:213"), " ",
+				pid, " ",
+				level, "\t")
+		} else {
+			fmt.Print(
+				Green, date.Format("15:04:05:213"), Reset, " ",
+				pid, Reset, " ",
+				lvColor, level, Reset, "\t")
+		}
+
 	case LEVEL_ERROR:
 		lvColor = Magenta
-		fmt.Print(
-			Green, date.Format("15:04:05:213"), Reset, " ",
-			pid, Reset, " ",
-			lvColor, level, Reset, "\t")
+		if Conf.Mode == MODE_DEV {
+			fmt.Print(
+				Green, date.Format("15:04:05:213"), Reset, " ",
+				pid, Reset, " ",
+				lvColor, level, Reset, "\t")
+		} else {
+			fmt.Print(
+				date.Format("15:04:05:213"), " ",
+				pid, " ",
+				level, "\t")
+		}
+
 	case LEVEL_DEBUG:
 		lvColor = Yellow
-		pc, _, line, _ := runtime.Caller(2)
-		f := runtime.FuncForPC(pc)
-		fmt.Print(
-			Green, date.Format("15:04:05:213"), Reset, " ",
-			pid, Reset, " ",
-			lvColor, level, Reset, "\t",
-			Yellow, f.Name()+" :"+strconv.Itoa(line), Reset, "\t")
+		if Conf.Mode == MODE_DEV {
+			pc, _, line, _ := runtime.Caller(2)
+			f := runtime.FuncForPC(pc)
+			fmt.Print(
+				Green, date.Format("15:04:05:213"), Reset, " ",
+				pid, Reset, " ",
+				lvColor, level, Reset, "\t",
+				Yellow, f.Name()+" :"+strconv.Itoa(line), Reset, "\t")
+		} else {
+			pc, _, line, _ := runtime.Caller(2)
+			f := runtime.FuncForPC(pc)
+			fmt.Print(
+				date.Format("15:04:05:213"), " ",
+				pid, " ",
+				level, "\t",
+				f.Name()+" :"+strconv.Itoa(line), "\t")
+		}
+
 	case LEVEL_WARN:
-		lvColor = YellowBg
-		pc, _, line, _ := runtime.Caller(2)
-		f := runtime.FuncForPC(pc)
-		fmt.Print(
-			Green, date.Format("15:04:05:213"), Reset, " ",
-			pid, Reset, " ",
-			lvColor, level, Reset, "\t",
-			Yellow, f.Name()+" :"+strconv.Itoa(line), Reset, "\t")
+		if Conf.Mode == MODE_DEV {
+			lvColor = YellowBg
+			pc, _, line, _ := runtime.Caller(2)
+			f := runtime.FuncForPC(pc)
+			fmt.Print(
+				Green, date.Format("15:04:05:213"), Reset, " ",
+				pid, Reset, " ",
+				lvColor, level, Reset, "\t",
+				Yellow, f.Name()+" :"+strconv.Itoa(line), Reset, "\t")
+		} else {
+			pc, _, line, _ := runtime.Caller(2)
+			f := runtime.FuncForPC(pc)
+			fmt.Print(
+				date.Format("15:04:05:213"), " ",
+				pid, " ",
+				level, "\t",
+				f.Name()+" :"+strconv.Itoa(line), "\t")
+		}
+
 	case LEVEL_INFO:
 		lvColor = Blue
-		fmt.Print(
-			Green, date.Format("15:04:05:213"), Reset, " ",
-			pid, Reset, " ",
-			lvColor, level, Reset, "\t")
+		if Conf.Mode == MODE_DEV {
+			fmt.Print(
+				Green, date.Format("15:04:05:213"), Reset, " ",
+				pid, Reset, " ",
+				lvColor, level, Reset, "\t")
+		} else {
+			fmt.Print(
+				date.Format("15:04:05:213"), " ",
+				pid, " ",
+				level, "\t")
+		}
+
 	}
 
 	// 输出参数
 	result := fmt.Sprint(a...)
+	if Conf.Mode != MODE_DEV {
+		//移除logger字符
+		result = strings.ReplaceAll(result, Blue, "")
+		result = strings.ReplaceAll(result, BlueBg, "")
+		result = strings.ReplaceAll(result, Yellow, "")
+		result = strings.ReplaceAll(result, YellowBg, "")
+		result = strings.ReplaceAll(result, Red, "")
+		result = strings.ReplaceAll(result, RedBg, "")
+		result = strings.ReplaceAll(result, Green, "")
+		result = strings.ReplaceAll(result, GreenBg, "")
+		result = strings.ReplaceAll(result, Magenta, "")
+		result = strings.ReplaceAll(result, MagentaBg, "")
+		result = strings.ReplaceAll(result, Reset, "")
+		result = strings.ReplaceAll(result, Cyan, "")
+		result = strings.ReplaceAll(result, CyanBg, "")
+	}
 	fmt.Println(string([]byte(result)[1 : len(result)-1]))
 }

@@ -16,8 +16,8 @@ package xdoc
 
 // 解析常量
 const (
-	HEAD_PACKAGE     = "/* XusiPackage ->" // package头
-	FOOT_PACKAGE     = "<- End */"         // package尾
+	HEAD_PACKAGE     = "/* XusiPackage ->" // 包头
+	FOOT_PACKAGE     = "<- End */"         // 包尾
 	HEAD_STRUCT      = "/* XusiStrcut ->"  // struct头
 	FOOT_STRUCT      = "// -< End"         // struct尾
 	FOOT_CONST_GROUP = "// -< End"         // 常量组尾

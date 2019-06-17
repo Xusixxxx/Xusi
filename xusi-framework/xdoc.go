@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package logger
+package main
 
-const (
-	// 运行类型
-	MODE_DEV  = "dev"  // &describe 开发环境
-	MODE_PROD = "prod" // &describe 生产环境
-	// 日志级别
-	LEVEL_FATAL = "Fatal" // &describe 致命的错误
-	LEVEL_ERROR = "Error" // &describe 运行期间产生的错误
-	LEVEL_WARN  = "Warn"  // &describe 警告
-	LEVEL_INFO  = "Info"  // &describe 有意义的事件信息
-	LEVEL_DEBUG = "Debug" // &describe 调试信息
-	LEVEL_TRACE = "Trace" // &describe 更详细的跟踪信息
+import (
+	xweb2 "Xusi/xusi-framework/xweb"
+	"xusi-projects/xusi-framework/xdoc"
+	"xusi-projects/xusi-framework/xweb"
 )
+
+func main() {
+	xweb.SetRunMode(xweb2.PROD)
+	xdoc.Run("9999")
+}

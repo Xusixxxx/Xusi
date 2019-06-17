@@ -55,7 +55,7 @@ func Build(projectPath string) error {
 			continue
 		}
 		// 排除指定后缀
-		if xFile.Name == "main.exe" {
+		if strings.Contains(xFile.Name, ".exe") {
 			continue
 		}
 		// 输出构建文件信息
@@ -89,12 +89,13 @@ func Build(projectPath string) error {
 	if err != nil {
 		return err
 	}
-
 	// 构建
-	err = exec.Command("go", "build", "main.go", "xusi_build.go").Start()
+	cmd := exec.Command("go", "build", "xdoc.go", "xusi_build.go")
 	if err != nil {
-		return err
+		fmt.Fprintln(os.Stderr, "error=>", err.Error())
 	}
+	cmd.Start()
+	cmd.Wait()
 
 	// 移除
 	time.Sleep(1 * time.Second)

@@ -85,6 +85,9 @@ func analysisFunc(content string, lines []string, packageName string) {
 					// 根据名字切片得到参数
 					paramSlice := strings.Split(strings.SplitN(strings.SplitN(strings.Split(formatLine, models.Name)[1], "(", 2)[1], ")", 2)[0], ",")
 					for _, param := range paramSlice {
+						if param == "" {
+							continue
+						}
 						nameAndTypeSlice := strings.Split(strings.TrimSpace(util.MoreSpaceToOnce(param)), " ")
 						if _, ok := models.Params[nameAndTypeSlice[0]]; ok {
 							p := models.Params[nameAndTypeSlice[0]]
@@ -267,20 +270,38 @@ func analysisPackage(content string, lines []string, packageModel *model.Package
 
 	// 取到包名
 	for _, line := range lines {
-		if strings.HasPrefix(line, "package") {
-			packageName = strings.ReplaceAll(line, "package", "")
+		if strings.HasPrefix(line, "package ") {
+			packageName = strings.ReplaceAll(line, "package ", "")
 			packageName = strings.TrimSpace(packageName)
 			break
 		}
 	}
 
 	// 取到包描述
-	packageDescribe = util.GetBetweenStr(content, HEAD_PACKAGE, FOOT_PACKAGE)
-	for _, line := range strings.Split(packageDescribe, "\n") {
-		if strings.HasPrefix(line, SIGN_DESCRIBE) {
-			packageDescribe = strings.ReplaceAll(line, SIGN_DESCRIBE, "")
-			packageDescribe = util.MoreSpaceToOnce(strings.TrimSpace(packageDescribe))
-			break
+	// 遍历每一行，如果这一行只为 HEAD_PACKAGE || FOOT_PACKAGE
+	// 那么记录开始和结尾行号再遍历
+	var startNumber, endNumber int
+	for index, line := range lines {
+		// 记录开始行号
+		if strings.TrimSpace(line) == HEAD_PACKAGE {
+			startNumber = index
+		}
+		if startNumber != 0 && strings.TrimSpace(line) == FOOT_PACKAGE {
+			endNumber = index
+		}
+		// 遍历内容区
+		/* XusiPackage ->
+		    @describe Xusi
+		<- End */
+		if startNumber != 0 && endNumber != 0 {
+			for i := startNumber; i < endNumber; i++ {
+				if strings.HasPrefix(lines[i], SIGN_DESCRIBE) {
+					packageDescribe = util.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(lines[i], SIGN_DESCRIBE, "")))
+					break
+				}
+			}
+			startNumber = 0
+			endNumber = 0
 		}
 	}
 
@@ -288,7 +309,25 @@ func analysisPackage(content string, lines []string, packageModel *model.Package
 	packageModel.Name = packageName
 	packageModel.Describe = packageDescribe
 
-	Docs[packageModel.Name] = *packageModel
+	// 如果存在
+	if _, ok := Docs[packageModel.Name]; ok {
+		pModel := Docs[packageModel.Name]
+		if !util.IsEmptyString(packageDescribe) {
+			pModel.Describe = packageDescribe
+		}
+		for key, value := range packageModel.Const {
+			pModel.Const[key] = value
+		}
+		for key, value := range packageModel.Struct {
+			pModel.Struct[key] = value
+		}
+		for key, value := range packageModel.Func {
+			pModel.Func[key] = value
+		}
+		Docs[packageModel.Name] = pModel
+	} else {
+		Docs[packageModel.Name] = *packageModel
+	}
 
 	return packageModel.Name
 }

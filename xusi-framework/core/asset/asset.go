@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// 静态资产文件
+/* XusiPackage ->
+    @describe 静态资产管理
+<- End */
 package asset
 
 import "xusi-projects/xusi-framework/core/util"
@@ -24,35 +26,29 @@ func init() {
 	AssetsMenu = map[string]Assets{}
 }
 
-// 资产信息
+/* XusiStrcut ->
+   @describe 静态资产模型
+*/
 type Assets struct {
-	Name     string // 资产名称
-	Content  string // 资产内容 （Base64加密）
-	FileName string // 文件名称
-	FileType string // 文件类型
-	FullName string // 完整路径
-}
+	Name     string // $describe 资产名称
+	Content  string // $describe 资产内容 （Base64加密）
+	FileName string // $describe 文件名称
+	FileType string // $describe 文件类型
+	FullName string // $describe 完整路径
+} // -< End
 
-// 添加资产
+/* XusiFunc ->
+    @describe 添加静态资产
+    @param key string 键
+    @param assets Assets 要添加的静态资产模型
+<- End */
 func Add(key string, assets Assets) {
 	AssetsMenu[key] = assets
 }
 
-// 根据Key获取资产
-func GetAssets(key string) Assets {
-	return AssetsMenu[key]
-}
-
-// 根据Key获取资产内容
-func GetContext(key string) ([]byte, error) {
-	base64Data, err := util.DecodedBase64(AssetsMenu[key].Content)
-	if err != nil {
-		return nil, err
-	}
-	return util.UnGZipCompress(base64Data)
-}
-
-// 获取资产内容
+/* XusiFunc ->
+    @describe 获取静态资产内容，返回<kbd>[]byte</kbd>和<kbd>error</kbd>
+<- End */
 func (assets Assets) GetContext() ([]byte, error) {
 	base64Data, err := util.DecodedBase64(assets.Content)
 	if err != nil {

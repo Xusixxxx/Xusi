@@ -14,11 +14,6 @@
 
 package model
 
-// Attr文档模型
-/*
- Name string 'json:"name"'  // $describe 示例
- 名称   类型     附加内容             描述
-*/
 type AttrModel struct {
 	Name     string // 名称
 	Type     string // 类型

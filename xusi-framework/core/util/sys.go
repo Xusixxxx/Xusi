@@ -19,7 +19,18 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"xusi-projects/xusi-framework/core/logger"
 )
+
+// 获取工作路径
+func GetWorkPath() string {
+	path, err := os.Getwd()
+	if err != nil {
+		logger.Error(err)
+		return ""
+	}
+	return path
+}
 
 // 获取程序当前运行目录
 func GetCurrentPath() (string, error) {

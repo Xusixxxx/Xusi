@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/* XusiPackage ->
+    @describe XWEB上下文封装
+<- End */
 package context
 
 import (
@@ -19,28 +22,37 @@ import (
 	"net/url"
 )
 
+/* XusiStrcut ->
+   @describe 请求上下文，包含了对Request和ResponseWriter的封装
+*/
 type Context struct {
 	Http struct {
 		*http.Request
 		http.ResponseWriter
 	}
 	// diy属性
-	StatusCode   int               // 状态码
-	RouterParams map[string]string // 路由参数，存在于url之中
-}
+	StatusCode   int               // $describe 状态码
+	RouterParams map[string]string // $describe 存在于url之中的路由参数，如：/xusi/{id}/{name}
+} // -< End
 
-// 将字符串写入响应体
-// 发送响应体及状态码
+/* XusiFunc ->
+    @describe 将字符串写入响应体
+    @param content string 字符串
+<- End */
 func (ctx Context) WirteString(content string) {
 	ctx.Http.ResponseWriter.Write([]byte(content))
 }
 
-// 获取头部
+/* XusiFunc ->
+    @describe 获取请求的Header信息
+<- End */
 func (ctx Context) GetHeader() http.Header {
 	return ctx.Http.Request.Header
 }
 
-// 获取表单
+/* XusiFunc ->
+    @describe 获取请求的From信息
+<- End */
 func (ctx Context) GetFrom() url.Values {
 	return ctx.Http.Request.Form
 }
