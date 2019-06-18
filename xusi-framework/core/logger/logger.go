@@ -28,6 +28,9 @@ import (
     @param a ...interface{} 输出的内容
 <- End */
 func Info(a ...interface{}) {
+	if Conf.Disable {
+		return
+	}
 	format(LEVEL_INFO, a)
 }
 
@@ -36,6 +39,9 @@ func Info(a ...interface{}) {
     @param a ...interface{} 输出的内容
 <- End */
 func Warn(a ...interface{}) {
+	if Conf.Disable {
+		return
+	}
 	format(LEVEL_WARN, a)
 }
 
@@ -44,6 +50,9 @@ func Warn(a ...interface{}) {
     @param a ...interface{} 输出的内容
 <- End */
 func Debug(a ...interface{}) {
+	if Conf.Disable {
+		return
+	}
 	format(LEVEL_DEBUG, a)
 }
 
@@ -52,6 +61,9 @@ func Debug(a ...interface{}) {
     @param a ...interface{} 输出的内容
 <- End */
 func Error(a ...interface{}) {
+	if Conf.Disable {
+		return
+	}
 	format(LEVEL_ERROR, a)
 	var buf [2 << 10]byte
 	// 去除第二三行
@@ -69,6 +81,9 @@ func Error(a ...interface{}) {
     @param a ...interface{} 输出的内容
 <- End */
 func Fatal(a ...interface{}) {
+	if Conf.Disable {
+		return
+	}
 	format(LEVEL_FATAL, a)
 	var buf [2 << 10]byte
 	// 去除第二三行
@@ -86,6 +101,9 @@ func Fatal(a ...interface{}) {
     @param a ...interface{} 输出的内容
 <- End */
 func Trace(a ...interface{}) {
+	if Conf.Disable {
+		return
+	}
 	format(LEVEL_TRACE, a)
 }
 

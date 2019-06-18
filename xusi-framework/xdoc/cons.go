@@ -21,7 +21,7 @@ const (
 	HEAD_STRUCT      = "/* XusiStrcut ->"  // struct头
 	FOOT_STRUCT      = "// -< End"         // struct尾
 	FOOT_CONST_GROUP = "// -< End"         // 常量组尾
-	HEAD_FUNC        = "/* XusiPackage ->" // func头
+	HEAD_FUNC        = "/* XusiFunc ->"    // func头
 	FOOT_FUNC        = "// -< End"         // func尾
 
 	TAG_CONS = "// &describe" // 常量标签

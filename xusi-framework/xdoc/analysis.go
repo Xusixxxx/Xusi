@@ -49,7 +49,7 @@ func analysisFunc(content string, lines []string, packageName string) {
 		if strings.Contains(line, HEAD_FUNC) {
 			startNumber = lineNumber
 		}
-		if (startNumber != 0) && strings.HasPrefix(line, "func") {
+		if (startNumber != 0) && strings.HasPrefix(line, "func ") {
 			endNumber = lineNumber + 1
 		}
 		// 解析方法体
@@ -59,7 +59,7 @@ func analysisFunc(content string, lines []string, packageName string) {
 			}
 			// 建立参数描述存储池
 			// 参数描述会在参数前解析，所以先存储
-			paramDescribePool := map[string]string{}
+			paramDescribePool := map[string][]string{}
 			for i := startNumber; i < endNumber; i++ {
 				formatLine := util.MoreSpaceToOnce(lines[i])
 				// 解析名称
@@ -109,7 +109,21 @@ func analysisFunc(content string, lines []string, packageName string) {
 				// 解析参数描述
 				if strings.HasPrefix(strings.TrimSpace(formatLine), SIGN_PARAM) {
 					typeAndDescribeSlice := strings.SplitN(util.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(formatLine, SIGN_PARAM, ""))), " ", 2)
-					paramDescribePool[typeAndDescribeSlice[0]] = typeAndDescribeSlice[1]
+					sliceTemp := strings.SplitN(typeAndDescribeSlice[1], " ", 2)
+					switch len(sliceTemp) {
+					case 1:
+						typeAndDescribeSlice = []string{typeAndDescribeSlice[0], sliceTemp[0]}
+					case 2:
+						typeAndDescribeSlice = []string{typeAndDescribeSlice[0], sliceTemp[0], sliceTemp[1]}
+					}
+					switch len(typeAndDescribeSlice) {
+					case 1:
+						paramDescribePool[typeAndDescribeSlice[0]] = []string{"", ""}
+					case 2:
+						paramDescribePool[typeAndDescribeSlice[0]] = []string{typeAndDescribeSlice[1], ""}
+					case 3:
+						paramDescribePool[typeAndDescribeSlice[0]] = []string{typeAndDescribeSlice[1], typeAndDescribeSlice[2]}
+					}
 				}
 			}
 			startNumber = 0
@@ -120,12 +134,14 @@ func analysisFunc(content string, lines []string, packageName string) {
 				if _, ok := models.Params[key]; ok {
 					p := models.Params[key]
 					p.Name = key
-					p.Type = value
+					p.Type = value[0]
+					p.Describe = value[1]
 					models.Params[p.Name] = p
 				} else {
 					models.Params[key] = model.AttrModel{
-						Name: key,
-						Type: value,
+						Name:     key,
+						Type:     value[0],
+						Describe: value[1],
 					}
 				}
 			}

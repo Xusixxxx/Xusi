@@ -12,17 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package static
 
 import (
-	"xusi-projects/xusi-framework/core/logger"
-	"xusi-projects/xusi-framework/xdoc"
+	"xusi-projects/xusi-framework/core/asset"
 	"xusi-projects/xusi-framework/xweb"
+	"xusi-projects/xusi-framework/xweb/context"
 	"xusi-projects/xusi-framework/xweb/httplib"
 )
 
-func main() {
-	logger.Conf.Disable = true
-	xweb.SetRunMode(httplib.RUNMODE_PROD)
-	xdoc.Run("9999")
+func init() {
+	xweb.Get("/logo", func(ctx *context.Context) {
+		// 找到Logo
+		isOK := false
+		for _, value := range asset.AssetsMenu {
+			if value.Name == "logo-xdoc.png" {
+				logo, err := value.GetContext()
+				if err != nil {
+					ctx.StatusCode = httplib.CODE_500
+				} else {
+					ctx.Http.ResponseWriter.Header().Set("Content-Type", "image/gif")
+					ctx.Http.ResponseWriter.Write(logo)
+				}
+				isOK = true
+				break
+			}
+		}
+		if !isOK {
+			ctx.StatusCode = httplib.CODE_404
+		}
+	})
 }

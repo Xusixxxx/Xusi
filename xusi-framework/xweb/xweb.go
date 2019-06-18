@@ -17,6 +17,7 @@
 package xweb
 
 import (
+	"xusi-projects/xusi-framework/core/logger"
 	"xusi-projects/xusi-framework/xweb/context"
 	"xusi-projects/xusi-framework/xweb/httplib"
 )
@@ -84,4 +85,5 @@ func All(pattern string, function func(ctx *context.Context)) {
 // 设置运行模式
 func SetRunMode(mode string) {
 	conf.mode = mode
+	logger.Conf.Mode = mode
 }

@@ -47,7 +47,7 @@ func Add(key string, assets Assets) {
 }
 
 /* XusiFunc ->
-    @describe 获取静态资产内容，返回<kbd>[]byte</kbd>和<kbd>error</kbd>
+    @describe 获取静态资产内容，返回 <kbd>[]byte</kbd> 和 <kbd>error</kbd>
 <- End */
 func (assets Assets) GetContext() ([]byte, error) {
 	base64Data, err := util.DecodedBase64(assets.Content)

@@ -54,7 +54,7 @@ const PAGE_DOC = `
 <body>
 <div class="container-fluid">
     <div class="row header">
-
+		<img src="/logo" height="50px" />
     </div>
     <div class="row content">
         <div class="left">{menu-left}</div>
@@ -78,5 +78,10 @@ const PAGE_DOC = `
     </div>
 </div>
 </body>
+<script>
+$(function () {
+  $('.param-tip').tooltip()
+})
+</script>
 </html>
 `

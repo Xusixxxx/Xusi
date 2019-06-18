@@ -18,9 +18,6 @@
 package xdoc
 
 import (
-	"fmt"
-	"sort"
-	"strings"
 	"xusi-projects/xusi-framework/core/asset"
 	"xusi-projects/xusi-framework/core/logger"
 	"xusi-projects/xusi-framework/xdoc/model"
@@ -63,76 +60,11 @@ func Run(port string) {
 
 // 生成文档路由
 func router() {
-	// 根
-	page := static.PAGE_DOC
+	// 根路由
 	root := "/"
-	// 排序
-	var keys []string
-	for key := range Docs {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-	//content := ""
+
 	// 加载目录
 	xweb.Get(root, func(ctx *context.Context) {
-		menu := ""
-		for _, key := range keys {
-			v := Docs[key]
-			if v.IsNull() {
-				continue
-			}
-			ul := `
-				<ul style="list-style:none;">
-					<a href="#` + v.Name + `">
-						<blockquote>
-							<p>pkg : ` + v.Name + `</p>
-							<footer>` + v.Describe + `</footer>
-							{function}
-						</blockquote>
-					</a>
-					
-				</ul>
-			`
-			// 添加函数内容
-			functionStrTemp := ""
-			for _, function := range v.Func {
-				functionStrTemp += `
-					<blockquote style="font-size:13px;">
-						<li role="presentation">
-							<a href="#` + v.Name + "-" + function.Name + `">
-								func ` + function.Name + ` 
-								(
-									{func-parames}
-								) 
-							</a>
-						</li>
-					</blockquote>
-				`
-				// 添加函数参数
-				paramStrTemp := ""
-				paramIndex := 1
-				for _, param := range function.Params {
-					if paramIndex < len(function.Params) {
-						paramStrTemp += `
-							<span class="badge">
-								` + param.Name + " " + param.Type + `
-							</span>,
-						`
-					} else {
-						paramStrTemp += `
-							<span class="badge">
-								` + param.Name + " " + param.Type + `
-							</span>
-						`
-					}
-					paramIndex++
-				}
-				// 去除最后一个逗号
-				functionStrTemp = strings.ReplaceAll(functionStrTemp, "{func-parames}", paramStrTemp)
-			}
-			ul = strings.ReplaceAll(ul, "{function}", functionStrTemp)
-			menu += ul
-		}
-		ctx.WirteString(strings.ReplaceAll(page, "{menu-content}", menu))
+		RenderMenu(static.PAGE_DOC, ctx)
 	})
 }
