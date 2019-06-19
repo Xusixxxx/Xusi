@@ -49,6 +49,15 @@ const PAGE_DOC = `
             float: left;
             width: 80%;
         }
+		.keyword{
+			/*color: #FF8C00;*/
+		}
+		.func-name{
+			/*color: #FFD700;*/
+		}
+		.type-name{
+			/*color: #32CD32;*/
+		}
     </style>
 </head>
 <body>

@@ -26,6 +26,7 @@ import (
 // xweb应用程序示例
 var app *application
 
+// 初始化xweb应用程序
 func init() {
 	app = &application{
 		Server:   &http.Server{},

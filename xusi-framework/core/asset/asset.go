@@ -38,7 +38,7 @@ type Assets struct {
 } // -< End
 
 /* XusiFunc ->
-    @describe 添加静态资产
+    @describe 添加静态资产（该函数通常由xusi-framework调用）
     @param key string 键
     @param assets Assets 要添加的静态资产模型
 <- End */

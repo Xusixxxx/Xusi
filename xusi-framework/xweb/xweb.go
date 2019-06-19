@@ -22,6 +22,10 @@ import (
 	"xusi-projects/xusi-framework/xweb/httplib"
 )
 
+/* XusiFunc ->
+    @describe 启动XWeb HTTP服务器
+    @param params ...string 启动的参数，通常仅传入一个端口
+<- End */
 func Run(params ...string) {
 	// 注册所有路由
 	registryRouters()
@@ -33,42 +37,93 @@ func Run(params ...string) {
 	}
 }
 
+/* XusiFunc ->
+    @describe 添加指定允许的方法类型的路由
+    @param pattern string 路由地址
+    @param method []string 允许的方法类型
+    @param function func(ctx *context.Context) 路由处理函数
+<- End */
 func Add(pattern string, method []string, function func(ctx *context.Context)) {
 	xrouterInstance.routerTable.Add(pattern, method, function)
 }
 
+/* XusiFunc ->
+    @describe 添加Get方法类型的路由
+    @param pattern string 路由地址
+    @param function func(ctx *context.Context) 路由处理函数
+<- End */
 func Get(pattern string, function func(ctx *context.Context)) {
 	xrouterInstance.routerTable.Add(pattern, []string{httplib.METHOD_GET}, function)
 }
 
+/* XusiFunc ->
+    @describe 添加Post方法类型的路由
+    @param pattern string 路由地址
+    @param function func(ctx *context.Context) 路由处理函数
+<- End */
 func Post(pattern string, function func(ctx *context.Context)) {
 	xrouterInstance.routerTable.Add(pattern, []string{httplib.METHOD_POST}, function)
 }
 
+/* XusiFunc ->
+    @describe 添加Put方法类型的路由
+    @param pattern string 路由地址
+    @param function func(ctx *context.Context) 路由处理函数
+<- End */
 func Put(pattern string, function func(ctx *context.Context)) {
 	xrouterInstance.routerTable.Add(pattern, []string{httplib.METHOD_PUT}, function)
 }
 
+/* XusiFunc ->
+    @describe 添加Delete方法类型的路由
+    @param pattern string 路由地址
+    @param function func(ctx *context.Context) 路由处理函数
+<- End */
 func Delete(pattern string, function func(ctx *context.Context)) {
 	xrouterInstance.routerTable.Add(pattern, []string{httplib.METHOD_DELETE}, function)
 }
 
+/* XusiFunc ->
+    @describe 添加Head方法类型的路由
+    @param pattern string 路由地址
+    @param function func(ctx *context.Context) 路由处理函数
+<- End */
 func Head(pattern string, function func(ctx *context.Context)) {
 	xrouterInstance.routerTable.Add(pattern, []string{httplib.METHOD_HEAD}, function)
 }
 
+/* XusiFunc ->
+    @describe 添加Trace方法类型的路由
+    @param pattern string 路由地址
+    @param function func(ctx *context.Context) 路由处理函数
+<- End */
 func Trace(pattern string, function func(ctx *context.Context)) {
 	xrouterInstance.routerTable.Add(pattern, []string{httplib.METHOD_TRACE}, function)
 }
 
+/* XusiFunc ->
+    @describe 添加Connect方法类型的路由
+    @param pattern string 路由地址
+    @param function func(ctx *context.Context) 路由处理函数
+<- End */
 func Connect(pattern string, function func(ctx *context.Context)) {
 	xrouterInstance.routerTable.Add(pattern, []string{httplib.METHOD_CONNECT}, function)
 }
 
+/* XusiFunc ->
+    @describe 添加Options方法类型的路由
+    @param pattern string 路由地址
+    @param function func(ctx *context.Context) 路由处理函数
+<- End */
 func Options(pattern string, function func(ctx *context.Context)) {
 	xrouterInstance.routerTable.Add(pattern, []string{httplib.METHOD_OPTIONS}, function)
 }
 
+/* XusiFunc ->
+    @describe 添加允许所有方法类型的路由
+    @param pattern string 路由地址
+    @param function func(ctx *context.Context) 路由处理函数
+<- End */
 func All(pattern string, function func(ctx *context.Context)) {
 	xrouterInstance.routerTable.Add(pattern, []string{
 		httplib.METHOD_GET,
@@ -83,6 +138,10 @@ func All(pattern string, function func(ctx *context.Context)) {
 }
 
 // 设置运行模式
+/* XusiFunc ->
+    @describe 设置XWeb HTTP服务器的运行模式
+    @param mode string 运行的模式
+<- End */
 func SetRunMode(mode string) {
 	conf.mode = mode
 	logger.Conf.Mode = mode

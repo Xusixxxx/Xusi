@@ -19,8 +19,13 @@ import (
 	"strings"
 )
 
-//取文本中间
-func GetBetweenStr(str, start, end string) string {
+/* XusiFunc ->
+    @describe 根据左边和右边的内容，获取指定字符串两者中间的内容，如果没找到则返回空字符串
+    @param str string 需要查找的字符串
+    @param start string 左边的标识符
+    @param end string 右边的标识符
+<- End */
+func GetBetweenStr(str string, start string, end string) string {
 	copy := str
 	n := strings.Index(str, start)
 	if n == -1 {
@@ -41,7 +46,10 @@ func GetBetweenStr(str, start, end string) string {
 	}
 }
 
-// 多个空格转换为一个
+/* XusiFunc ->
+    @describe 将字符串中多个连续空格转换为一个空格，返回转换结果
+    @param s string 需要转换的字符串
+<- End */
 func MoreSpaceToOnce(s string) string {
 	//删除字符串中的多余空格，有多个空格时，仅保留一个空格
 	s1 := strings.Replace(s, "	", " ", -1)       //替换tab为空格
@@ -57,7 +65,10 @@ func MoreSpaceToOnce(s string) string {
 	return string(s2)
 }
 
-// 是否为空字符串
+/* XusiFunc ->
+    @describe 检查字符串是否为空字符串，返回bool
+    @param str string 需要检查的字符串
+<- End */
 func IsEmptyString(str string) bool {
 	if str == "" || len(str) == 0 {
 		return true
@@ -65,7 +76,10 @@ func IsEmptyString(str string) bool {
 	return false
 }
 
-// 是否为大写开头
+/* XusiFunc ->
+    @describe 检查字符串是否为大写字母开头
+    @param str string 需要检查的字符串
+<- End */
 func IsUpperPrefix(str string) bool {
 	return ([]byte(str)[0] >= 65) && ([]byte(str)[0] <= 90)
 }

@@ -14,8 +14,10 @@
 
 package logger
 
+// 日志配置器
 var Conf loggerConfigurator
 
+// 初始化日志配置器，赋予一些默认的设置
 func init() {
 	Conf = loggerConfigurator{
 		Mode:    MODE_DEV,
@@ -23,6 +25,7 @@ func init() {
 	}
 }
 
+// 日志配置器结构体
 type loggerConfigurator struct {
 	Mode    string // 运行环境
 	Disable bool   // 是否禁用日志

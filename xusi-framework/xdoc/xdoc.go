@@ -12,9 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/* XusiPackage ->
-    @describe xdoc启动器，可建立一个基于xweb的文档服务端
-<- End */
 package xdoc
 
 import (

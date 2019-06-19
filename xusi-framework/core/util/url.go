@@ -19,12 +19,18 @@ import (
 	"xusi-projects/xusi-framework/core/logger"
 )
 
-// URL编码
+/* XusiFunc ->
+    @describe 对字符串进行URL编码，返回编码结果
+    @param content string 需要编码的内容
+<- End */
 func UrlEncoder(content string) string {
 	return url.QueryEscape(content)
 }
 
-// URL解码
+/* XusiFunc ->
+    @describe 对已进行URL编码的字符串进行解码，返回解码内容
+    @param content string 需要解码的内容
+<- End */
 func UrlDecoder(content string) string {
 	result, err := url.QueryUnescape(content)
 	if err != nil {

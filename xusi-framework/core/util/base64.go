@@ -12,16 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/* XusiPackage ->
+    @describe Xusi-framework-core中所包含的通用开发工具包
+<- End */
 package util
 
 import "encoding/base64"
 
-// Base64加密
+/* XusiFunc ->
+    @describe 对数据进行Base64加密，返回一个string类型的加密结果
+    @param data []byte 需要加密的数据
+<- End */
 func EncryptBase64(data []byte) string {
 	return base64.StdEncoding.EncodeToString(data)
 }
 
-// Base64解密
+/* XusiFunc ->
+    @describe 对已经进行Base64加密的数据进行解密，返回字节数组和错误信息
+    @param data string 已被进行Base64加密的数据
+<- End */
 func DecodedBase64(data string) ([]byte, error) {
 	decoded, err := base64.StdEncoding.DecodeString(data)
 	if err != nil {

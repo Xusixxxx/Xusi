@@ -24,19 +24,24 @@ import (
 	"time"
 )
 
-// Xusi文件信息结构
+/* XusiStrcut ->
+   @describe 更详细的文件信息模型（由Xusi操作的文件相关内容均为该类型）
+*/
 type XFile struct {
-	Name       string      // 文件名
-	Ext        string      // 文件后缀名
-	FullName   string      // 绝对路径
-	IsDir      bool        // 是否为文件夹
-	Size       int64       // 文件大小
-	Mode       os.FileMode // 文件的模式和权限位
-	ModifyTime time.Time   // 文件修改时间
-	Sys        interface{} // 底层数据来源（可以返回nil）
-}
+	Name       string      // $describe 文件名
+	Ext        string      // $describe 文件后缀名
+	FullName   string      // $describe 绝对路径
+	IsDir      bool        // $describe 是否为文件夹
+	Size       int64       // $describe 文件大小
+	Mode       os.FileMode // $describe 文件的模式和权限位
+	ModifyTime time.Time   // $describe 文件修改时间
+	Sys        interface{} // $describe 底层数据来源（可以返回nil）
+} // -< End
 
-// 获取文件的XFile信息
+/* XusiFunc ->
+    @describe 获取Golang原生文件的XFile信息，返回XFile文件信息和错误信息
+    @param fInfo os.FileInfo Golang原生文件信息
+<- End */
 func GetXFile(fInfo os.FileInfo) (XFile, error) {
 	fullName, e := filepath.Abs(filepath.Dir(fInfo.Name()))
 	if e != nil {
@@ -55,7 +60,10 @@ func GetXFile(fInfo os.FileInfo) (XFile, error) {
 	}
 }
 
-// 获取路径下的所有文件
+/* XusiFunc ->
+    @describe 获取指定路径下的所有包括子目录的文件，返回XFile数组
+    @param dirPath string 需要扫描的路径
+<- End */
 func GetFilesAll(dirPath string) []XFile {
 	result := ""
 	getAllFiles(&result, dirPath)
@@ -64,7 +72,10 @@ func GetFilesAll(dirPath string) []XFile {
 	return xfiles
 }
 
-// 获取指定路径下的文件
+/* XusiFunc ->
+    @describe 获取指定路径下的所有不包括子目录的文件，返回XFile数组
+    @param dirPath string 需要扫描的路径
+<- End */
 func GetFiles(dirPath string) []XFile {
 	result := ""
 	files, _ := ioutil.ReadDir(dirPath)
@@ -114,7 +125,10 @@ func getXFile(rootPath string, fInfo os.FileInfo) XFile {
 	}
 }
 
-// 读取文件内容
+/* XusiFunc ->
+    @describe 获取指定文件的内容，返回字节数组类型的内容及错误信息
+    @param filePath string 需要获取的文件路径
+<- End */
 func ReadFileContent(filePath string) ([]byte, error) {
 	f, err := os.Open(filePath)
 	if err != nil {
@@ -123,8 +137,11 @@ func ReadFileContent(filePath string) ([]byte, error) {
 	return ioutil.ReadAll(f)
 }
 
-// 写入数据到文件中
-// 不存在则会创建新文件
+/* XusiFunc ->
+    @describe 写入数据到指定文件中，如果文件不存在则会创建一个新文件，返回错误信息
+    @param path string 文件路径
+    @param data []byte 需要写入的内容
+<- End */
 func WriteToFile(path string, data []byte) error {
 	var f *os.File
 	var err error
@@ -148,10 +165,13 @@ func WriteToFile(path string, data []byte) error {
 	return nil
 }
 
-// 文件是否存在
-func FileIsExist(filename string) bool {
+/* XusiFunc ->
+    @describe 检测指定文件是否存在
+    @param filePath string 需要检测的文件路径
+<- End */
+func FileIsExist(filePath string) bool {
 	var exist = true
-	if _, err := os.Stat(filename); os.IsNotExist(err) {
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		exist = false
 	}
 	return exist

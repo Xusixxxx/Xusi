@@ -22,7 +22,9 @@ import (
 	"xusi-projects/xusi-framework/core/logger"
 )
 
-// 获取工作路径
+/* XusiFunc ->
+    @describe 获取项目的工作路径，返回string
+<- End */
 func GetWorkPath() string {
 	path, err := os.Getwd()
 	if err != nil {
@@ -32,7 +34,9 @@ func GetWorkPath() string {
 	return path
 }
 
-// 获取程序当前运行目录
+/* XusiFunc ->
+    @describe 获取程序当前运行的目录，返回目录路径和错误信息
+<- End */
 func GetCurrentPath() (string, error) {
 	s, err := exec.LookPath(os.Args[0])
 	if err != nil {
@@ -43,7 +47,9 @@ func GetCurrentPath() (string, error) {
 	return path, nil
 }
 
-// 获取程序当前运行路径（不抛出error）
+/* XusiFunc ->
+    @describe 获取程序当前运行的目录，返回目录路径，不抛出错误信息
+<- End */
 func GetCurrentPathNoErr() string {
 	s, err := exec.LookPath(os.Args[0])
 	if err != nil {
@@ -54,7 +60,9 @@ func GetCurrentPathNoErr() string {
 	return path
 }
 
-// 获取当前程序执行路径
+/* XusiFunc ->
+    @describe 获取当前程序的运行路径，返回目录路径及错误信息
+<- End */
 func GetRunPath() (string, error) {
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
