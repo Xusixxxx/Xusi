@@ -13,3 +13,17 @@
 // limitations under the License.
 
 package logger
+
+var Conf loggerConfigurator
+
+func init() {
+	Conf = loggerConfigurator{
+		Mode:    MODE_DEV,
+		Disable: false,
+	}
+}
+
+type loggerConfigurator struct {
+	Mode    string // 运行环境
+	Disable bool   // 是否禁用日志
+}

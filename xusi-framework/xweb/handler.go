@@ -53,8 +53,6 @@ func (r *requestHandler) serveHTTP(responseWriter http.ResponseWriter, request *
 		r.realRoute = key
 	} else {
 		// 解析路由参数
-		//		/hello/{id}/{name}
-		//		/hello/{id}/{name}/xusi/{age}
 		// 取到每一段切片，并排除第一段空切片
 		slice := strings.Split(key, "/")
 		slice = slice[1:len(slice)]

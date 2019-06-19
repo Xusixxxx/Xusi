@@ -6,7 +6,7 @@ Xusi 是一个新开始的项目，没有准备开始任何商业使用。就如
  - 再者，目前的Xusi Framework都只是仅仅实现功能，未进行任何性能及代码优化。
  - 作者`Xusixxxx`使用`Golang`这门开发语言的时间不长，并且学习过程的路子比较野生。如果有不符合编码规范的编码内容，或着有来自您的宝贵意见，希望您能够指出，我们将表示由衷感谢！
  
- <a href="https://github.com/Xusixxxx/Xusi"><img align="center" style="margin-right:20px;" src="https://s2.ax1x.com/2019/06/16/VTbJ1S.png" title="logo created by @xusixxxx" /></a>
+ <a href="https://github.com/Xusixxxx/Xusi"><img align="center" style="margin-right:20px;" src="http://przimj0kd.bkt.clouddn.com/logo-framework.png?e=1560849204&token=KTrMT_fnULmylWtMq0WH4htHUN74vKGMcbY1X_j-:lxR5SHgwPSNZ0XPpfYGPJyO7-8g" title="logo created by @xusixxxx" /></a>
  
  如果您希望联系到我，下面会是能够最快捷联系到我们的联系方式💖：
 

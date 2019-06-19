@@ -19,11 +19,12 @@
 package build
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"strings"
-	"time"
 	"xusi-projects/xusi-framework/core/util"
 )
 
@@ -55,7 +56,7 @@ func Build(projectPath string) error {
 			continue
 		}
 		// 排除指定后缀
-		if xFile.Name == "main.exe" {
+		if strings.Contains(xFile.Name, ".exe") {
 			continue
 		}
 		// 输出构建文件信息
@@ -89,19 +90,26 @@ func Build(projectPath string) error {
 	if err != nil {
 		return err
 	}
-
 	// 构建
-	err = exec.Command("go", "build", "main.go", "xusi_build.go").Start()
+	cmd := exec.Command("go", "build", "xdoc.go", "xusi_build.go")
+	//显示运行的命令
+	fmt.Println(cmd.Args)
+	stdout, err := cmd.StderrPipe()
 	if err != nil {
 		return err
 	}
-
-	// 移除
-	time.Sleep(1 * time.Second)
-	err = os.Remove(projectPath + "/xusi_build.go")
-	if err != nil {
-		return err
+	cmd.Start()
+	reader := bufio.NewReader(stdout)
+	//实时循环读取输出流中的一行内容
+	err = nil
+	for {
+		line, err2 := reader.ReadString('\n')
+		if err2 != nil || io.EOF == err2 {
+			os.Remove(projectPath + "/xusi_build.go")
+			break
+		}
+		fmt.Print(line)
 	}
-
-	return nil
+	cmd.Wait()
+	return err
 }

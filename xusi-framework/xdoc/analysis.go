@@ -49,7 +49,7 @@ func analysisFunc(content string, lines []string, packageName string) {
 		if strings.Contains(line, HEAD_FUNC) {
 			startNumber = lineNumber
 		}
-		if (startNumber != 0) && strings.HasPrefix(line, "func") {
+		if (startNumber != 0) && strings.HasPrefix(line, "func ") {
 			endNumber = lineNumber + 1
 		}
 		// 解析方法体
@@ -59,7 +59,7 @@ func analysisFunc(content string, lines []string, packageName string) {
 			}
 			// 建立参数描述存储池
 			// 参数描述会在参数前解析，所以先存储
-			paramDescribePool := map[string]string{}
+			paramDescribePool := map[string][]string{}
 			for i := startNumber; i < endNumber; i++ {
 				formatLine := util.MoreSpaceToOnce(lines[i])
 				// 解析名称
@@ -85,6 +85,9 @@ func analysisFunc(content string, lines []string, packageName string) {
 					// 根据名字切片得到参数
 					paramSlice := strings.Split(strings.SplitN(strings.SplitN(strings.Split(formatLine, models.Name)[1], "(", 2)[1], ")", 2)[0], ",")
 					for _, param := range paramSlice {
+						if param == "" {
+							continue
+						}
 						nameAndTypeSlice := strings.Split(strings.TrimSpace(util.MoreSpaceToOnce(param)), " ")
 						if _, ok := models.Params[nameAndTypeSlice[0]]; ok {
 							p := models.Params[nameAndTypeSlice[0]]
@@ -106,7 +109,21 @@ func analysisFunc(content string, lines []string, packageName string) {
 				// 解析参数描述
 				if strings.HasPrefix(strings.TrimSpace(formatLine), SIGN_PARAM) {
 					typeAndDescribeSlice := strings.SplitN(util.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(formatLine, SIGN_PARAM, ""))), " ", 2)
-					paramDescribePool[typeAndDescribeSlice[0]] = typeAndDescribeSlice[1]
+					sliceTemp := strings.SplitN(typeAndDescribeSlice[1], " ", 2)
+					switch len(sliceTemp) {
+					case 1:
+						typeAndDescribeSlice = []string{typeAndDescribeSlice[0], sliceTemp[0]}
+					case 2:
+						typeAndDescribeSlice = []string{typeAndDescribeSlice[0], sliceTemp[0], sliceTemp[1]}
+					}
+					switch len(typeAndDescribeSlice) {
+					case 1:
+						paramDescribePool[typeAndDescribeSlice[0]] = []string{"", ""}
+					case 2:
+						paramDescribePool[typeAndDescribeSlice[0]] = []string{typeAndDescribeSlice[1], ""}
+					case 3:
+						paramDescribePool[typeAndDescribeSlice[0]] = []string{typeAndDescribeSlice[1], typeAndDescribeSlice[2]}
+					}
 				}
 			}
 			startNumber = 0
@@ -117,12 +134,14 @@ func analysisFunc(content string, lines []string, packageName string) {
 				if _, ok := models.Params[key]; ok {
 					p := models.Params[key]
 					p.Name = key
-					p.Type = value
+					p.Type = value[0]
+					p.Describe = value[1]
 					models.Params[p.Name] = p
 				} else {
 					models.Params[key] = model.AttrModel{
-						Name: key,
-						Type: value,
+						Name:     key,
+						Type:     value[0],
+						Describe: value[1],
 					}
 				}
 			}
@@ -267,20 +286,38 @@ func analysisPackage(content string, lines []string, packageModel *model.Package
 
 	// 取到包名
 	for _, line := range lines {
-		if strings.HasPrefix(line, "package") {
-			packageName = strings.ReplaceAll(line, "package", "")
+		if strings.HasPrefix(line, "package ") {
+			packageName = strings.ReplaceAll(line, "package ", "")
 			packageName = strings.TrimSpace(packageName)
 			break
 		}
 	}
 
 	// 取到包描述
-	packageDescribe = util.GetBetweenStr(content, HEAD_PACKAGE, FOOT_PACKAGE)
-	for _, line := range strings.Split(packageDescribe, "\n") {
-		if strings.HasPrefix(line, SIGN_DESCRIBE) {
-			packageDescribe = strings.ReplaceAll(line, SIGN_DESCRIBE, "")
-			packageDescribe = util.MoreSpaceToOnce(strings.TrimSpace(packageDescribe))
-			break
+	// 遍历每一行，如果这一行只为 HEAD_PACKAGE || FOOT_PACKAGE
+	// 那么记录开始和结尾行号再遍历
+	var startNumber, endNumber int
+	for index, line := range lines {
+		// 记录开始行号
+		if strings.TrimSpace(line) == HEAD_PACKAGE {
+			startNumber = index
+		}
+		if startNumber != 0 && strings.TrimSpace(line) == FOOT_PACKAGE {
+			endNumber = index
+		}
+		// 遍历内容区
+		/* XusiPackage ->
+		    @describe Xusi
+		<- End */
+		if startNumber != 0 && endNumber != 0 {
+			for i := startNumber; i < endNumber; i++ {
+				if strings.HasPrefix(lines[i], SIGN_DESCRIBE) {
+					packageDescribe = util.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(lines[i], SIGN_DESCRIBE, "")))
+					break
+				}
+			}
+			startNumber = 0
+			endNumber = 0
 		}
 	}
 
@@ -288,7 +325,25 @@ func analysisPackage(content string, lines []string, packageModel *model.Package
 	packageModel.Name = packageName
 	packageModel.Describe = packageDescribe
 
-	Docs[packageModel.Name] = *packageModel
+	// 如果存在
+	if _, ok := Docs[packageModel.Name]; ok {
+		pModel := Docs[packageModel.Name]
+		if !util.IsEmptyString(packageDescribe) {
+			pModel.Describe = packageDescribe
+		}
+		for key, value := range packageModel.Const {
+			pModel.Const[key] = value
+		}
+		for key, value := range packageModel.Struct {
+			pModel.Struct[key] = value
+		}
+		for key, value := range packageModel.Func {
+			pModel.Func[key] = value
+		}
+		Docs[packageModel.Name] = pModel
+	} else {
+		Docs[packageModel.Name] = *packageModel
+	}
 
 	return packageModel.Name
 }

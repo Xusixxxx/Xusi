@@ -12,20 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Xusi 自动化文档
+/* XusiPackage ->
+    @describe xdoc启动器，可建立一个基于xweb的文档服务端
+<- End */
 package xdoc
 
 import (
 	"xusi-projects/xusi-framework/core/asset"
+	"xusi-projects/xusi-framework/core/logger"
 	"xusi-projects/xusi-framework/xdoc/model"
+	"xusi-projects/xusi-framework/xdoc/static"
 	"xusi-projects/xusi-framework/xdoc/xdoc_util"
+	"xusi-projects/xusi-framework/xweb"
+	"xusi-projects/xusi-framework/xweb/context"
 )
 
 // 文档字典
 var Docs = map[string]model.PackageModel{}
 
-// Xusi 文档开始解析
-func Run() {
+// 文档缓存
+var docCache = map[string]string{}
+
+/* XusiFunc ->
+    @describe 运行xdoc文档web服务器
+    @param port string 监听端口
+<- End */
+func Run(port string) {
+	// 日志配置
+	logger.Conf.Mode = logger.MODE_PROD
 	// 遍历所有静态资产
 	for _, assetFile := range asset.AssetsMenu {
 		// 格式化静态资产文件内容
@@ -35,6 +49,22 @@ func Run() {
 		}
 
 		// 开始解析
+		logger.Info("analysis >> " + assetFile.Name)
 		startAnalysis(content)
 	}
+	// 路由解析
+	router()
+	// 启动web服务
+	xweb.Run(port)
+}
+
+// 生成文档路由
+func router() {
+	// 根路由
+	root := "/"
+
+	// 加载目录
+	xweb.Get(root, func(ctx *context.Context) {
+		RenderMenu(static.PAGE_DOC, ctx)
+	})
 }

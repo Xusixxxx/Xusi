@@ -27,7 +27,6 @@ import (
 var app *application
 
 func init() {
-	logger.Info("init xusi web application")
 	app = &application{
 		Server:   &http.Server{},
 		Handlers: &requestHandler{},

@@ -16,12 +16,12 @@ package xdoc
 
 // 解析常量
 const (
-	HEAD_PACKAGE     = "/* XusiPackage ->" // package头
-	FOOT_PACKAGE     = "<- End */"         // package尾
+	HEAD_PACKAGE     = "/* XusiPackage ->" // 包头
+	FOOT_PACKAGE     = "<- End */"         // 包尾
 	HEAD_STRUCT      = "/* XusiStrcut ->"  // struct头
 	FOOT_STRUCT      = "// -< End"         // struct尾
 	FOOT_CONST_GROUP = "// -< End"         // 常量组尾
-	HEAD_FUNC        = "/* XusiPackage ->" // func头
+	HEAD_FUNC        = "/* XusiFunc ->"    // func头
 	FOOT_FUNC        = "// -< End"         // func尾
 
 	TAG_CONS = "// &describe" // 常量标签
