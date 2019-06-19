@@ -2,11 +2,11 @@
 
  <a href="https://github.com/Xusixxxx/Xusi"><img align="center" style="margin-right:20px;" src="http://przimj0kd.bkt.clouddn.com/logo-framework.png?e=1560849204&token=KTrMT_fnULmylWtMq0WH4htHUN74vKGMcbY1X_j-:lxR5SHgwPSNZ0XPpfYGPJyO7-8g" title="logo created by @xusixxxx" /></a>
 
-###介绍（Introduce）
+### 介绍（Introduce）
  
  xusi-framework为总的xusi项目内容，包含了core、xdoc、xweb等基础支持套件。
 
-###使用（Using）- xusi-framework
+### 使用（Using）- xusi-framework
 ****
  - 确保已经在环境变量对`$GOPATH$\bin`进行了配置；
  - 将`xusi-item-app`进行编译，并将最终的文件改名为`xusi`后放置到第一步的目录中；
