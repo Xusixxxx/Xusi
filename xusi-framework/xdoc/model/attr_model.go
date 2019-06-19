@@ -25,4 +25,5 @@ type AttrModel struct {
 	Type     string // $describe 属性类型
 	Addition string // $describe 属性的附加内容（如json指定等）
 	Describe string // $describe 属性描述
+	Index    int    // $describe 所在的位置
 } // -< End

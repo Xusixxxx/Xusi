@@ -17,6 +17,7 @@ package xdoc
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 	"xusi-projects/xusi-framework/core/util"
 	"xusi-projects/xusi-framework/xweb/context"
@@ -99,14 +100,14 @@ func RenderMenu(rootPage string, ctx *context.Context) {
 			// 排序
 			var paramKeys []string
 			for paramKey := range function.Params {
-				paramKeys = append(paramKeys, paramKey)
+				paramKeys = append(paramKeys, strconv.Itoa(function.Params[paramKey].Index)+"|"+paramKey)
 			}
 			sort.Strings(paramKeys)
 
 			paramStrTemp := ""
 			paramIndex := 1
 			for _, paramKey := range paramKeys {
-				param := function.Params[paramKey]
+				param := function.Params[strings.Split(paramKey, "|")[1]]
 				fmt.Println(param.Name, param.Type)
 				if paramIndex < len(function.Params) {
 					paramStrTemp += `

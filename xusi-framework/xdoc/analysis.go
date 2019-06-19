@@ -87,7 +87,7 @@ func analysisFunc(content string, lines []string, packageName string) {
 
 					// 根据名字切片得到参数
 					paramSlice := strings.Split(strings.SplitN(strings.SplitN(strings.Split(formatLine, models.Name)[1], "(", 2)[1], ")", 2)[0], ",")
-					for _, param := range paramSlice {
+					for i, param := range paramSlice {
 						if param == "" {
 							continue
 						}
@@ -99,11 +99,13 @@ func analysisFunc(content string, lines []string, packageName string) {
 							p := models.Params[nameAndTypeSlice[0]]
 							p.Name = nameAndTypeSlice[0]
 							p.Type = nameAndTypeSlice[1]
+							p.Index = i
 							models.Params[p.Name] = p
 						} else {
 							models.Params[nameAndTypeSlice[0]] = model.AttrModel{
-								Name: nameAndTypeSlice[0],
-								Type: nameAndTypeSlice[1],
+								Name:  nameAndTypeSlice[0],
+								Type:  nameAndTypeSlice[1],
+								Index: i,
 							}
 						}
 					}
