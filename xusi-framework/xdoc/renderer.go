@@ -15,13 +15,15 @@
 package xdoc
 
 import (
+	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 	"xusi-projects/xusi-framework/core/util"
 	"xusi-projects/xusi-framework/xweb/context"
 )
 
-// 渲染目录
+// 渲染内容区的目录
 func RenderMenu(rootPage string, ctx *context.Context) {
 	menu := ""
 	// 排序
@@ -42,7 +44,7 @@ func RenderMenu(rootPage string, ctx *context.Context) {
 				<ul style="list-style:none;">
 					<a href="#` + v.Name + `">
 						<blockquote>
-							<p>pkg : ` + v.Name + `</p>
+							<p><span class="keyword">package</span> : <span class="package-name">` + v.Name + `</span></p>
 							<footer>` + v.Describe + `</footer></br>
 							{struct}
 							{function}
@@ -66,7 +68,7 @@ func RenderMenu(rootPage string, ctx *context.Context) {
 			structStrTemp += `
 					<blockquote style="font-size:13px;">
 						<li role="presentation">
-							<a href="#">type ` + struct4.Name + `</a>
+							<a href="#"><span class="keyword">type</span> <span class="type-name">` + struct4.Name + `</span></a>
 							<span style="color:#999999;font-size:12px;"> - ` + struct4.Describe + `</p>
 						</li>
 					</blockquote>
@@ -87,7 +89,7 @@ func RenderMenu(rootPage string, ctx *context.Context) {
 			functionStrTemp += `
 					<blockquote style="font-size:13px;">
 						<li role="presentation">
-							<a href="#" ` + function.Name + "-" + function.Name + `">func ` + function.Name + `</a>
+							<a href="#" ` + function.Name + "-" + function.Name + `"><span class="keyword">func</span> <span class="func-name">` + function.Name + `</span></a>
 								({func-parames})
 							<span style="color:#999999;font-size:12px;"> - ` + function.Describe + `</p>
 
@@ -98,14 +100,15 @@ func RenderMenu(rootPage string, ctx *context.Context) {
 			// 排序
 			var paramKeys []string
 			for paramKey := range function.Params {
-				paramKeys = append(paramKeys, paramKey)
+				paramKeys = append(paramKeys, strconv.Itoa(function.Params[paramKey].Index)+"|"+paramKey)
 			}
 			sort.Strings(paramKeys)
 
 			paramStrTemp := ""
 			paramIndex := 1
 			for _, paramKey := range paramKeys {
-				param := function.Params[paramKey]
+				param := function.Params[strings.Split(paramKey, "|")[1]]
+				fmt.Println(param.Name, param.Type)
 				if paramIndex < len(function.Params) {
 					paramStrTemp += `
 							<span class="badge param-tip" data-placement="top" title="` + param.Describe + `">
@@ -130,5 +133,3 @@ func RenderMenu(rootPage string, ctx *context.Context) {
 	}
 	ctx.WirteString(strings.ReplaceAll(rootPage, "{menu-content}", menu))
 }
-
-// 渲染

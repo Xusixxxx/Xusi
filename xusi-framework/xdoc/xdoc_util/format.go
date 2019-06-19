@@ -19,9 +19,12 @@ import (
 	"xusi-projects/xusi-framework/core/asset"
 )
 
-// 资产文件内容格式化
-// 保证每一行首尾没有空格，移除多余空行
+/* XusiFunc ->
+    @describe 对资产文件内容进行格式化（通常由xusi-framework内部使用）
+    @param assetFile asset.Assets 需要格式化的资产模型
+<- End */
 func FormatAssets(assetFile asset.Assets) (string, error) {
+	// 去除多余空格及多余空行
 	assetContent, err := assetFile.GetContext()
 	if err != nil {
 		return "", err

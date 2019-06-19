@@ -14,9 +14,11 @@
 
 package model
 
-// Struct文档模型
+/* XusiStrcut ->
+   @describe 用于支撑XDoc运行的结构体模型
+*/
 type StructModel struct {
-	Name     string               // 名称
-	Describe string               // 描述
-	Attr     map[string]AttrModel // 包含的属性 【属性名称】属性
-}
+	Name     string               // $describe 结构体名称
+	Describe string               // $describe 结构体描述
+	Attr     map[string]AttrModel // $describe 结构体包含的属性
+} // -< End

@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/* XusiPackage ->
+    @describe 维持xdoc运行的核心包，包含了xdoc的启动、渲染、常量、解析等
+<- End */
 package xdoc
 
 import (
@@ -84,20 +87,25 @@ func analysisFunc(content string, lines []string, packageName string) {
 
 					// 根据名字切片得到参数
 					paramSlice := strings.Split(strings.SplitN(strings.SplitN(strings.Split(formatLine, models.Name)[1], "(", 2)[1], ")", 2)[0], ",")
-					for _, param := range paramSlice {
+					for i, param := range paramSlice {
 						if param == "" {
 							continue
 						}
-						nameAndTypeSlice := strings.Split(strings.TrimSpace(util.MoreSpaceToOnce(param)), " ")
+						nameAndTypeSlice := strings.SplitN(strings.TrimSpace(util.MoreSpaceToOnce(param)), " ", 2)
+						if strings.Contains(nameAndTypeSlice[1], "(") {
+							nameAndTypeSlice[1] += ")"
+						}
 						if _, ok := models.Params[nameAndTypeSlice[0]]; ok {
 							p := models.Params[nameAndTypeSlice[0]]
 							p.Name = nameAndTypeSlice[0]
 							p.Type = nameAndTypeSlice[1]
+							p.Index = i
 							models.Params[p.Name] = p
 						} else {
 							models.Params[nameAndTypeSlice[0]] = model.AttrModel{
-								Name: nameAndTypeSlice[0],
-								Type: nameAndTypeSlice[1],
+								Name:  nameAndTypeSlice[0],
+								Type:  nameAndTypeSlice[1],
+								Index: i,
 							}
 						}
 					}
@@ -109,7 +117,14 @@ func analysisFunc(content string, lines []string, packageName string) {
 				// 解析参数描述
 				if strings.HasPrefix(strings.TrimSpace(formatLine), SIGN_PARAM) {
 					typeAndDescribeSlice := strings.SplitN(util.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(formatLine, SIGN_PARAM, ""))), " ", 2)
-					sliceTemp := strings.SplitN(typeAndDescribeSlice[1], " ", 2)
+					// 如果切片量大于2，则标识参数类型有携带空格，如 func(xusi Xusi)的函数参数
+					sliceTempN := strings.Split(typeAndDescribeSlice[1], " ")
+					// 拼接第1个切片到倒数第2个
+					tempStr := ""
+					for _, value := range sliceTempN[0 : len(sliceTempN)-1] {
+						tempStr += string(value) + " "
+					}
+					sliceTemp := []string{tempStr, sliceTempN[len(sliceTempN)-1]}
 					switch len(sliceTemp) {
 					case 1:
 						typeAndDescribeSlice = []string{typeAndDescribeSlice[0], sliceTemp[0]}

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /* XusiPackage ->
-    @describe XWEB上下文封装
+    @describe 对XWeb上下文的封装，允许更为快捷的对上下文进行操作
 <- End */
 package context
 
@@ -23,7 +23,7 @@ import (
 )
 
 /* XusiStrcut ->
-   @describe 请求上下文，包含了对Request和ResponseWriter的封装
+   @describe 请求上下文，包含了对Request和ResponseWriter的封装，以及一些特殊属性
 */
 type Context struct {
 	Http struct {
@@ -31,7 +31,7 @@ type Context struct {
 		http.ResponseWriter
 	}
 	// diy属性
-	StatusCode   int               // $describe 状态码
+	StatusCode   int               // $describe 请求的结果状态码
 	RouterParams map[string]string // $describe 存在于url之中的路由参数，如：/xusi/{id}/{name}
 } // -< End
 

@@ -14,9 +14,11 @@
 
 package model
 
-// Func文档模型
+/* XusiStrcut ->
+   @describe 用于支撑XDoc运行的函数模型
+*/
 type FuncModel struct {
-	Name     string               // 名称
-	Describe string               // 描述
-	Params   map[string]AttrModel // 接受的参数
-}
+	Name     string               // $describe 函数的名称
+	Describe string               // $describe 函数的描述
+	Params   map[string]AttrModel // $describe 函数所接受的参数
+} // -< End

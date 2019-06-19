@@ -14,10 +14,12 @@
 
 package model
 
-// Const文档模型
+/* XusiStrcut ->
+   @describe 用于支撑XDoc运行的常量模型
+*/
 type ConstModel struct {
-	Name     string // 名称
-	Type     string // 类型
-	Value    string // 值
-	Describe string // 描述
-}
+	Name     string // $describe 常量名称
+	Type     string // $describe 常量类型
+	Value    string // $describe 常量值
+	Describe string // $describe 常量描述
+} // -< End

@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/* XusiPackage ->
+    @describe 记录器，用于支撑日志功能
+<- End */
 package logger
 
 import (

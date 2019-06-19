@@ -16,7 +16,10 @@ package util
 
 import "reflect"
 
-// 获取package路径
+/* XusiFunc ->
+    @describe 根据传入对象获取指定package路径，返回string类型的路径信息
+    @param obj interface{} 需要获取的package中的任一对象
+<- End */
 func GetPackagePath(obj interface{}) string {
 	return reflect.TypeOf(obj).PkgPath()
 }

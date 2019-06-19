@@ -20,7 +20,10 @@ import (
 	"io/ioutil"
 )
 
-// GZip 压缩
+/* XusiFunc ->
+    @describe 对数据进行GZip压缩，返回bytes.Buffer和错误信息
+    @param data []byte 需要压缩的数据
+<- End */
 func GZipCompress(data []byte) (bytes.Buffer, error) {
 	var buf bytes.Buffer
 	gzipWriter := gzip.NewWriter(&buf)
@@ -36,7 +39,10 @@ func GZipCompress(data []byte) (bytes.Buffer, error) {
 	return buf, nil
 }
 
-// GZip 解压缩
+/* XusiFunc ->
+    @describe 对已进行GZip压缩的数据进行解压缩，返回字节数组及错误信息
+    @param dataByte []byte 需要进行解压缩的数据
+<- End */
 func UnGZipCompress(dataByte []byte) ([]byte, error) {
 	data := *bytes.NewBuffer(dataByte)
 	// 读取压缩过的数据

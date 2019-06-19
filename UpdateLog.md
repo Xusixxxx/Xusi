@@ -3,13 +3,21 @@
  <a href="https://github.com/Xusixxxx/Xusi"><img align="center" style="margin-right:20px;" src="http://przimj0kd.bkt.clouddn.com/logo-framework.png?e=1560849204&token=KTrMT_fnULmylWtMq0WH4htHUN74vKGMcbY1X_j-:lxR5SHgwPSNZ0XPpfYGPJyO7-8g" title="logo created by @xusixxxx" /></a>
 
 该项目的完整的更新进程
-- 修订：Xusixxxx
+- 修订：Xusixxxx(xusixxxx@gmail.com)
 ****
+
+##### 2019/06/19
+```sh
+1、修复xdoc解析中允许使用函数作为参数而引发的缺失问题；
+2、对xusi-frameword所有对外公开函数添加了基于xdoc的文档注释；
+3、解决了xdoc生成的文档中函数参数顺序BUG。
+```
 
 ##### 2019/06/18
 ```sh
 1、实现了xdoc的页面的package和function的显示；
-2、优化了xdoc对function的解析。
+2、优化了xdoc对function的解析；
+3、xusi-framework添加了部分内嵌资源。
 ```
 
 ##### 2019/06/17
