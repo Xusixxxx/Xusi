@@ -51,6 +51,11 @@ $ go get -u -v github.com/Xusixxxx/Xusi
 ###### `describe`：Xusi Framework WEB，Web开发框架
 ##
 
+# 动态
+
+<a href="https://github.com/Xusixxxx/Xusi"><img align="center" style="margin-right:20px;" src="https://github.com/Xusixxxx/Asset/blob/master/xusi-frameword-xdoc-.png" title="xdoc" /></a>
+
+
 # 额外的资产
 
 Xusi还包含了一些用于支撑一些特定功能实现的程序编码。
