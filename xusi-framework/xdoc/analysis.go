@@ -24,12 +24,8 @@ import (
 	"xusi-projects/xusi-framework/xdoc/model"
 )
 
-// 解析次数
-var count = 0
-
 // 开始解析
 func startAnalysis(content string, assetFile asset.Assets) {
-	count++
 	// 取得逐行数据
 	lines := strings.Split(content, "\n")
 	// 建立文档模型
