@@ -47,8 +47,9 @@ func Run(port string) {
 
 		// 开始解析
 		logger.Info("analysis >> " + assetFile.Name)
-		startAnalysis(content)
+		startAnalysis(content, assetFile)
 	}
+
 	// 路由解析
 	router()
 	// 启动web服务
@@ -62,6 +63,9 @@ func router() {
 
 	// 加载目录
 	xweb.Get(root, func(ctx *context.Context) {
-		RenderMenu(static.PAGE_DOC, ctx)
+		page := RenderMenu(static.PAGE_DOC)
+		page = RenderSidebar(page)
+
+		ctx.WirteString(page)
 	})
 }

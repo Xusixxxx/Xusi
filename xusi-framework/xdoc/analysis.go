@@ -19,24 +19,34 @@ package xdoc
 
 import (
 	"strings"
+	"xusi-projects/xusi-framework/core/asset"
 	"xusi-projects/xusi-framework/core/util"
 	"xusi-projects/xusi-framework/xdoc/model"
 )
 
+// 解析次数
+var count = 0
+
 // 开始解析
-func startAnalysis(content string) {
+func startAnalysis(content string, assetFile asset.Assets) {
+	count++
 	// 取得逐行数据
 	lines := strings.Split(content, "\n")
 	// 建立文档模型
 	packageModel := model.PackageModel{
+		IsRoot:   false,
 		Name:     "",
 		Describe: "",
 		Const:    map[string]model.ConstModel{},
 		Struct:   map[string]model.StructModel{},
 		Func:     map[string]model.FuncModel{},
+		DirPath:  assetFile.DirPath,
 	}
+
 	// 开始正式解析
 	packageName := analysisPackage(content, lines, &packageModel)
+
+	// 内容解析
 	analysisConst(content, lines, packageName)
 	analysisStruct(content, lines, packageName)
 	analysisFunc(content, lines, packageName)
@@ -265,6 +275,9 @@ func analysisConst(content string, lines []string, packageName string) {
 		// 解析常量组
 		if (startNumber != 0) && (endNumber != 0) {
 			for i := startNumber; i < endNumber; i++ {
+				if !strings.Contains(lines[i], TAG_CONS) {
+					continue
+				}
 				model, isOpen := constFormat(lines[i])
 				if isOpen {
 					constModels[model.Name] = model
@@ -341,8 +354,8 @@ func analysisPackage(content string, lines []string, packageModel *model.Package
 	packageModel.Describe = packageDescribe
 
 	// 如果存在
-	if _, ok := Docs[packageModel.Name]; ok {
-		pModel := Docs[packageModel.Name]
+	if _, ok := Docs[packageModel.GetPackagePath()]; ok {
+		pModel := Docs[packageModel.GetPackagePath()]
 		if !util.IsEmptyString(packageDescribe) {
 			pModel.Describe = packageDescribe
 		}
@@ -355,12 +368,12 @@ func analysisPackage(content string, lines []string, packageModel *model.Package
 		for key, value := range packageModel.Func {
 			pModel.Func[key] = value
 		}
-		Docs[packageModel.Name] = pModel
+		Docs[packageModel.GetPackagePath()] = pModel
 	} else {
-		Docs[packageModel.Name] = *packageModel
+		Docs[packageModel.GetPackagePath()] = *packageModel
 	}
 
-	return packageModel.Name
+	return packageModel.GetPackagePath()
 }
 
 func constFormat(formatLine string) (model.ConstModel, bool) {

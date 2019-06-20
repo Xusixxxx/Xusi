@@ -20,7 +20,9 @@ const PAGE_DOC = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>⚡️Xusi General Development Suite</title>
+    <title>Xusi General Development Suite</title>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
     <style rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		` + BOOTSTRAP_CSS + `
 	</style>
@@ -32,41 +34,78 @@ const PAGE_DOC = `
 	</script>
     <style type="text/css">
         .header{
+			z-index: 999;
             position: fixed;
             width: 100%;
             height: 50px;
+			background-color: #FFFFFF;
+			-moz-box-shadow:2px 2px 5px #B5B5B5; -webkit-box-shadow:2px 2px 5px #B5B5B5; box-shadow:2px 2px 5px #B5B5B5;
         }
+		.header li{
+			float:left;
+			line-height:50px;
+		}
+		.header .logo{
+			margin-right: 130px;'
+		}
+		.header .i-li{
+			min-width:140px;
+		}
         .content{
             margin-top: 50px;
         }
         .left{
-            min-height: 500px;
+			padding-top: 40px;
             float: left;
             width: 20%;
+			position: fixed;
+			overflow: auto;
+			height:calc(100% - 50px);
+			
         }
+		.scroll-bar::-webkit-scrollbar {/*滚动条整体样式*/
+       		width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
+        	height: 1px;
+		}
+		.scroll-bar::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+			border-radius: 10px;
+			 -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+			background: #535353;
+		}
+		.scroll-bar::-webkit-scrollbar-track {/*滚动条里面轨道*/
+			-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+			border-radius: 10px;
+			background: #EDEDED;
+		}
         .right{
-            min-height: 500px;
+			padding-left: 20px;
+			margin-left: 20%;
+			height: auto;
             float: left;
             width: 80%;
         }
 		.keyword{
-			/*color: #FF8C00;*/
+			color: #006633;
 		}
 		.func-name{
-			/*color: #FFD700;*/
+			color: #9966FF;
 		}
 		.type-name{
-			/*color: #32CD32;*/
+			color: #9966FF;
 		}
     </style>
 </head>
-<body>
+<body class="scroll-bar">
 <div class="container-fluid">
     <div class="row header">
-		<img src="/logo" height="50px" />
+		<ul style="list-style:none;">
+			<li class="logo"><a href="/"><img src="/logo" height="50px" /></a></li>
+			<li class="i-li"><a href="/">开发文档</a></li>
+			<li class="i-li"><a href="/api">API文档</a></li>
+		</ul>
     </div>
     <div class="row content">
-        <div class="left">{menu-left}</div>
+        <div class="left scroll-bar">{menu-left}</div>
         <div class="right">
 			<div class="page-header">
 				<h1>⚡️Xusi General Development Suite</h1></br>
@@ -82,7 +121,6 @@ const PAGE_DOC = `
 			<blockquote>
 				{menu-content}
 			</blockquote>
-			{content}
 		</div>
     </div>
 </div>
