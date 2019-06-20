@@ -20,7 +20,7 @@ const PAGE_DOC = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Xusi General Development Suite</title>
+    <title>{xdoc-name}</title>
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 	<link rel="icon" href="/favicon.ico" type="image/x-icon">
     <style rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -105,21 +105,19 @@ const PAGE_DOC = `
 		</ul>
     </div>
     <div class="row content">
-        <div class="left scroll-bar">{menu-left}</div>
+        <div class="left scroll-bar">` + PAGE_SLDEBAR + `</div>
         <div class="right">
 			<div class="page-header">
-				<h1>⚡️Xusi General Development Suite</h1></br>
+				<h1>⚡️{xdoc-name}</h1></br>
 			</div>
 			<blockquote>
-				<p>xusi-framework</p>
-				<p>Xusi框架项目开发文档，文档由xdoc生成，随代码更新而更新。</p>
+				` + PAGE_DESCRIBE + `
 			</blockquote>
 			<blockquote>
-			  <p>目录</p>
-			  <footer>xusi-framework开发内容清单</footer>
+			  ` + PAGE_DESCRIBE_LABEL + `
 			</blockquote>
 			<blockquote>
-				{menu-content}
+				` + PAGE_MENU_CONTENT + `
 			</blockquote>
 		</div>
     </div>

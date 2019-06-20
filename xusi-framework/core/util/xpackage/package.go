@@ -12,24 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package api
+/* XusiPackage ->
+    @describe 针对package操作的相关工具包
+<- End */
+package xpackage
 
-import (
-	"xusi-projects/xusi-framework/xweb"
-	"xusi-projects/xusi-framework/xweb/context"
-)
+import "reflect"
 
-func init() {
-
-	xweb.Get("/hello/{id}/{name}", func(ctx *context.Context) {
-		ctx.WirteString("hello, [" + ctx.RouterParams["id"] + "]" + ctx.RouterParams["name"] + "!")
-	})
-
-	xweb.Get("/hello1", func(ctx *context.Context) {
-		ctx.WirteString("ces1")
-	})
-
-	xweb.Get("/hello2", func(ctx *context.Context) {
-		ctx.WirteString("ces2")
-	})
+/* XusiFunc ->
+    @describe 根据传入对象获取指定package路径，返回string类型的路径信息
+    @param obj interface{} 需要获取的package中的任一对象
+<- End */
+func GetPackagePath(obj interface{}) string {
+	return reflect.TypeOf(obj).PkgPath()
 }

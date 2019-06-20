@@ -19,15 +19,18 @@ package asset
 
 import (
 	"strings"
-	"xusi-projects/xusi-framework/core/util"
+	"xusi-projects/xusi-framework/core/util/xbase64"
+	"xusi-projects/xusi-framework/core/util/xgzip"
 )
 
 // xusi build 路径
 var ROOT_PATH = ""
 
 // 资产菜单
+// 存储所有资产数据
 var AssetsMenu map[string]Assets
 
+// 初始化资产菜单，避免为nil xmap
 func init() {
 	AssetsMenu = map[string]Assets{}
 }
@@ -58,9 +61,9 @@ func Add(key string, assets Assets) {
     @describe 获取静态资产内容，返回[]byte和error
 <- End */
 func (assets Assets) GetContext() ([]byte, error) {
-	base64Data, err := util.DecodedBase64(assets.Content)
+	base64Data, err := xbase64.DecodedBase64(assets.Content)
 	if err != nil {
 		return nil, err
 	}
-	return util.UnGZipCompress(base64Data)
+	return xgzip.UnGZipCompress(base64Data)
 }

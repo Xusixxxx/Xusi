@@ -14,11 +14,6 @@
 
 package main
 
-import (
-	"xusi-projects/xusi-framework/xweb"
-	_ "xusi-projects/xusi-item-test/api"
-)
-
 func main() {
-	xweb.Run("80")
+
 }

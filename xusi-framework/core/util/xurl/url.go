@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package util
+/* XusiPackage ->
+    @describe 针对url操作的相关工具包
+<- End */
+package xurl
 
 import (
 	"net/url"

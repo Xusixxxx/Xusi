@@ -13,9 +13,9 @@
 // limitations under the License.
 
 /* XusiPackage ->
-    @describe Xusi-framework-core中所包含的通用开发工具包
+    @describe 针对base64的相关工具包
 <- End */
-package util
+package xbase64
 
 import "encoding/base64"
 

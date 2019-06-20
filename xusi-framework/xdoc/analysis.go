@@ -13,15 +13,16 @@
 // limitations under the License.
 
 /* XusiPackage ->
-    @describe 维持xdoc运行的核心包，包含了xdoc的启动、渲染、常量、解析等
+    @describe 维持xdoc运行的核心包，包含了xdoc的启动、渲染、常量、解析等，默认已引入Bootstrap3及Jquery
 <- End */
 package xdoc
 
 import (
 	"strings"
 	"xusi-projects/xusi-framework/core/asset"
-	"xusi-projects/xusi-framework/core/util"
+	"xusi-projects/xusi-framework/core/util/xstring"
 	"xusi-projects/xusi-framework/xdoc/model"
+	"xusi-projects/xusi-framework/xdoc/static"
 )
 
 // 开始解析
@@ -37,6 +38,7 @@ func startAnalysis(content string, assetFile asset.Assets) {
 		Struct:   map[string]model.StructModel{},
 		Func:     map[string]model.FuncModel{},
 		DirPath:  assetFile.DirPath,
+		Exclude:  []string{},
 	}
 
 	// 开始正式解析
@@ -55,7 +57,7 @@ func analysisFunc(content string, lines []string, packageName string) {
 	var startNumber, endNumber int
 	for lineNumber, line := range lines {
 		// 得到开始和结束行号
-		if strings.Contains(line, HEAD_FUNC) {
+		if strings.Contains(line, static.HEAD_FUNC) {
 			startNumber = lineNumber
 		}
 		if (startNumber != 0) && strings.HasPrefix(line, "func ") {
@@ -70,7 +72,7 @@ func analysisFunc(content string, lines []string, packageName string) {
 			// 参数描述会在参数前解析，所以先存储
 			paramDescribePool := map[string][]string{}
 			for i := startNumber; i < endNumber; i++ {
-				formatLine := util.MoreSpaceToOnce(lines[i])
+				formatLine := xstring.MoreSpaceToOnce(lines[i])
 				// 解析名称
 				if strings.HasPrefix(formatLine, "func") {
 					funcBody := strings.TrimSpace(strings.Replace(formatLine, "func", "", 1))
@@ -82,13 +84,13 @@ func analysisFunc(content string, lines []string, packageName string) {
 						// 0 ： (xusi The
 						// 1 ：  Init(mode string, isDebug bool) Application {
 						slice := strings.SplitN(funcBody, ")", 2)
-						models.Name = strings.TrimSpace(util.MoreSpaceToOnce(strings.SplitN(strings.TrimSpace(slice[1]), "(", 2)[0]))
+						models.Name = strings.TrimSpace(xstring.MoreSpaceToOnce(strings.SplitN(strings.TrimSpace(slice[1]), "(", 2)[0]))
 					} else {
 						// 函数名在括号前
 						// 切片
 						// 0 ：Init
 						// 1 ：mode string, isDebug bool) Application {
-						models.Name = util.MoreSpaceToOnce(strings.TrimSpace(strings.SplitN(funcBody, "(", 2)[0]))
+						models.Name = xstring.MoreSpaceToOnce(strings.TrimSpace(strings.SplitN(funcBody, "(", 2)[0]))
 					}
 
 					// 根据名字切片得到参数
@@ -97,7 +99,7 @@ func analysisFunc(content string, lines []string, packageName string) {
 						if param == "" {
 							continue
 						}
-						nameAndTypeSlice := strings.SplitN(strings.TrimSpace(util.MoreSpaceToOnce(param)), " ", 2)
+						nameAndTypeSlice := strings.SplitN(strings.TrimSpace(xstring.MoreSpaceToOnce(param)), " ", 2)
 						if strings.Contains(nameAndTypeSlice[1], "(") {
 							nameAndTypeSlice[1] += ")"
 						}
@@ -117,12 +119,12 @@ func analysisFunc(content string, lines []string, packageName string) {
 					}
 				}
 				// 解析描述
-				if strings.HasPrefix(strings.TrimSpace(formatLine), SIGN_DESCRIBE) {
-					models.Describe = util.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(formatLine, SIGN_DESCRIBE, "")))
+				if strings.HasPrefix(strings.TrimSpace(formatLine), static.SIGN_DESCRIBE) {
+					models.Describe = xstring.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(formatLine, static.SIGN_DESCRIBE, "")))
 				}
 				// 解析参数描述
-				if strings.HasPrefix(strings.TrimSpace(formatLine), SIGN_PARAM) {
-					typeAndDescribeSlice := strings.SplitN(util.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(formatLine, SIGN_PARAM, ""))), " ", 2)
+				if strings.HasPrefix(strings.TrimSpace(formatLine), static.SIGN_PARAM) {
+					typeAndDescribeSlice := strings.SplitN(xstring.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(formatLine, static.SIGN_PARAM, ""))), " ", 2)
 					// 如果切片量大于2，则标识参数类型有携带空格，如 func(xusi Xusi)的函数参数
 					sliceTempN := strings.Split(typeAndDescribeSlice[1], " ")
 					// 拼接第1个切片到倒数第2个
@@ -172,7 +174,7 @@ func analysisFunc(content string, lines []string, packageName string) {
 	}
 	// 合并map
 	for _, value := range funcModel {
-		if !util.IsEmptyString(value.Name) && util.IsUpperPrefix(value.Name) {
+		if !xstring.IsEmptyString(value.Name) && xstring.IsUpperPrefix(value.Name) {
 			Docs[packageName].Func[value.Name] = value
 		}
 	}
@@ -185,10 +187,10 @@ func analysisStruct(content string, lines []string, packageName string) {
 	var startNumber, endNumber int
 	for lineNumber, line := range lines {
 		// 得到结构体的开始结束行号，开始解析
-		if strings.Contains(line, HEAD_STRUCT) {
+		if strings.Contains(line, static.HEAD_STRUCT) {
 			startNumber = lineNumber
 		}
-		if (startNumber != 0) && strings.HasSuffix(line, FOOT_STRUCT) {
+		if (startNumber != 0) && strings.HasSuffix(line, static.FOOT_STRUCT) {
 			endNumber = lineNumber
 		}
 		// 解析结构体
@@ -201,37 +203,37 @@ func analysisStruct(content string, lines []string, packageName string) {
 				// 解析名称
 				// 如果不为公开型结构体，直接忽略跳过
 				if strings.HasPrefix(childrenLine, "type") {
-					modeler.Name = strings.TrimSpace(util.GetBetweenStr(childrenLine, "type", "struct"))
+					modeler.Name = strings.TrimSpace(xstring.GetBetweenStr(childrenLine, "type", "struct"))
 				}
 				// 解析描述
-				if strings.HasPrefix(strings.TrimSpace(childrenLine), SIGN_DESCRIBE) {
-					modeler.Describe = util.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(childrenLine, SIGN_DESCRIBE, "")))
+				if strings.HasPrefix(strings.TrimSpace(childrenLine), static.SIGN_DESCRIBE) {
+					modeler.Describe = xstring.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(childrenLine, static.SIGN_DESCRIBE, "")))
 				}
 				// 解析属性
-				if strings.Contains(childrenLine, TAG_ATTR) {
+				if strings.Contains(childrenLine, static.TAG_ATTR) {
 					attrModel := model.AttrModel{}
 					// 切片1为名称和类型
 					// 切片2为附加属性和描述
 					// Host  string | json:"host"` // $describe 主机
 					// 如果只有1个切片，标识没有附加属性
-					attrAndDescribeSlice := strings.SplitN(util.MoreSpaceToOnce(childrenLine), "`", 2)
+					attrAndDescribeSlice := strings.SplitN(xstring.MoreSpaceToOnce(childrenLine), "`", 2)
 					// 如果不为公开属性，则直接忽略跳过
 					// 如果没有编写属性名称，也直接忽略跳过
 					// 切片1为名称
 					// 切片2为类型
 					// 如果只有1个切片，则表示没有名称
 					nameAndTypeSlice := strings.Split(strings.TrimSpace(attrAndDescribeSlice[0]), " ")
-					if (len(nameAndTypeSlice) == 1) || !util.IsUpperPrefix(childrenLine) {
+					if (len(nameAndTypeSlice) == 1) || !xstring.IsUpperPrefix(childrenLine) {
 						continue
 					} else {
 						// 赋值
 						switch len(attrAndDescribeSlice) {
 						case 1:
-							attrModel.Describe = strings.TrimSpace(strings.ReplaceAll(attrAndDescribeSlice[0], TAG_ATTR, ""))
+							attrModel.Describe = strings.TrimSpace(strings.SplitN(attrAndDescribeSlice[0], static.TAG_ATTR, 2)[1])
 						case 2:
 							AdditionAndDescribe := strings.Split(attrAndDescribeSlice[1], "`")
-							attrModel.Describe = strings.TrimSpace(strings.ReplaceAll(AdditionAndDescribe[1], TAG_ATTR, ""))
-							attrModel.Addition = "`" + util.MoreSpaceToOnce(strings.TrimSpace(AdditionAndDescribe[0])) + "`"
+							attrModel.Describe = strings.TrimSpace(strings.ReplaceAll(AdditionAndDescribe[1], static.TAG_ATTR, ""))
+							attrModel.Addition = "`" + xstring.MoreSpaceToOnce(strings.TrimSpace(AdditionAndDescribe[0])) + "`"
 						}
 						attrModel.Name = nameAndTypeSlice[0]
 						attrModel.Type = nameAndTypeSlice[1]
@@ -247,7 +249,7 @@ func analysisStruct(content string, lines []string, packageName string) {
 	}
 	// 合并map
 	for _, value := range structModels {
-		if !util.IsEmptyString(value.Name) && util.IsUpperPrefix(value.Name) {
+		if !xstring.IsEmptyString(value.Name) && xstring.IsUpperPrefix(value.Name) {
 			Docs[packageName].Struct[value.Name] = value
 		}
 	}
@@ -260,18 +262,18 @@ func analysisConst(content string, lines []string, packageName string) {
 	for lineNumber, line := range lines {
 		// 解析常量组
 		// 如果为常量组 const ( ... )
-		if strings.Contains(strings.TrimSpace(util.MoreSpaceToOnce(line)), "const (") {
+		if strings.Contains(strings.TrimSpace(xstring.MoreSpaceToOnce(line)), "const (") {
 			startNumber = lineNumber + 1 // 加1为了忽略掉 const ( 行
 			continue
 		}
-		if (startNumber != 0) && strings.HasSuffix(util.MoreSpaceToOnce(strings.TrimSpace(line)), FOOT_CONST_GROUP) {
+		if (startNumber != 0) && strings.HasSuffix(xstring.MoreSpaceToOnce(strings.TrimSpace(line)), static.FOOT_CONST_GROUP) {
 			endNumber = lineNumber
 			continue
 		}
 		// 解析常量组
 		if (startNumber != 0) && (endNumber != 0) {
 			for i := startNumber; i < endNumber; i++ {
-				if !strings.Contains(lines[i], TAG_CONS) {
+				if !strings.Contains(lines[i], static.TAG_CONS) {
 					continue
 				}
 				model, isOpen := constFormat(lines[i])
@@ -286,7 +288,7 @@ func analysisConst(content string, lines []string, packageName string) {
 		}
 
 		// 解析普通常量
-		if strings.Contains(line, TAG_CONS) {
+		if strings.Contains(line, static.TAG_CONS) {
 			// 如果为const + 空格开头，清除该字符串
 			if strings.HasPrefix(line, "const ") {
 				model, isOpen := constFormat(strings.Replace(line, "const ", "", -1))
@@ -323,10 +325,10 @@ func analysisPackage(content string, lines []string, packageModel *model.Package
 	var startNumber, endNumber int
 	for index, line := range lines {
 		// 记录开始行号
-		if strings.TrimSpace(line) == HEAD_PACKAGE {
+		if strings.TrimSpace(line) == static.HEAD_PACKAGE {
 			startNumber = index
 		}
-		if startNumber != 0 && strings.TrimSpace(line) == FOOT_PACKAGE {
+		if startNumber != 0 && strings.TrimSpace(line) == static.FOOT_PACKAGE {
 			endNumber = index
 		}
 		// 遍历内容区
@@ -335,8 +337,8 @@ func analysisPackage(content string, lines []string, packageModel *model.Package
 		<- End */
 		if startNumber != 0 && endNumber != 0 {
 			for i := startNumber; i < endNumber; i++ {
-				if strings.HasPrefix(lines[i], SIGN_DESCRIBE) {
-					packageDescribe = util.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(lines[i], SIGN_DESCRIBE, "")))
+				if strings.HasPrefix(lines[i], static.SIGN_DESCRIBE) {
+					packageDescribe = xstring.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(lines[i], static.SIGN_DESCRIBE, "")))
 					break
 				}
 			}
@@ -352,7 +354,7 @@ func analysisPackage(content string, lines []string, packageModel *model.Package
 	// 如果存在
 	if _, ok := Docs[packageModel.GetPackagePath()]; ok {
 		pModel := Docs[packageModel.GetPackagePath()]
-		if !util.IsEmptyString(packageDescribe) {
+		if !xstring.IsEmptyString(packageDescribe) {
 			pModel.Describe = packageDescribe
 		}
 		for key, value := range packageModel.Const {
@@ -372,6 +374,7 @@ func analysisPackage(content string, lines []string, packageModel *model.Package
 	return packageModel.GetPackagePath()
 }
 
+// 常量格式化
 func constFormat(formatLine string) (model.ConstModel, bool) {
 	model := model.ConstModel{}
 	// 对一个出现的“=”符号进行切割，需要最终结果为两个切片
@@ -379,7 +382,7 @@ func constFormat(formatLine string) (model.ConstModel, bool) {
 	// slice1 = 常量名字 or 常量名字 + 类型      	CONS_NAME / CONST_NAME string
 	// slice2 = 常量值 + 描述					"value" // &describe 生产环境
 	slice := strings.SplitN(formatLine, "=", 2)
-	slice[0] = util.MoreSpaceToOnce(strings.TrimSpace(slice[0]))
+	slice[0] = xstring.MoreSpaceToOnce(strings.TrimSpace(slice[0]))
 	slice[1] = strings.TrimSpace(slice[1])
 	// 解析切片1
 	// 如果只有名称，那么切片数量为1，并且值为本身
@@ -387,7 +390,7 @@ func constFormat(formatLine string) (model.ConstModel, bool) {
 	// 也就数量代表了”1“为只有名称，”2“为包含了名称和类型
 	nameAndTypeSlice := strings.Split(slice[0], " ")
 	// 如果不为公开内容，则忽略，进入下一个
-	if !util.IsUpperPrefix(nameAndTypeSlice[0]) {
+	if !xstring.IsUpperPrefix(nameAndTypeSlice[0]) {
 		return model, false
 	}
 	switch len(nameAndTypeSlice) {
@@ -401,13 +404,13 @@ func constFormat(formatLine string) (model.ConstModel, bool) {
 	// 对切片2进行再切片，子切片中，第一个为”Value“，第二个则为”Describe”和“Type“
 	// 对两个子切片进行格式化
 	// 让值遵循原有意愿，但是需要对描述进行无意义字符串的格式化
-	valueAndDescribeSlice := strings.SplitN(slice[1], TAG_CONS, 2)
+	valueAndDescribeSlice := strings.SplitN(slice[1], static.TAG_CONS, 2)
 	valueAndDescribeSlice[0] = strings.TrimSpace(valueAndDescribeSlice[0])
-	valueAndDescribeSlice[1] = util.MoreSpaceToOnce(strings.TrimSpace(valueAndDescribeSlice[1]))
+	valueAndDescribeSlice[1] = xstring.MoreSpaceToOnce(strings.TrimSpace(valueAndDescribeSlice[1]))
 	// 赋值
 	model.Value = valueAndDescribeSlice[0]
 	model.Describe = valueAndDescribeSlice[1]
-	if util.IsEmptyString(model.Type) {
+	if xstring.IsEmptyString(model.Type) {
 		model.Type = "unknown"
 	}
 	return model, true

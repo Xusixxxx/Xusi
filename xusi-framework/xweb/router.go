@@ -21,7 +21,7 @@ import (
 	"strconv"
 	"strings"
 	"xusi-projects/xusi-framework/core/logger"
-	"xusi-projects/xusi-framework/core/util"
+	"xusi-projects/xusi-framework/core/util/xurl"
 	"xusi-projects/xusi-framework/xweb/context"
 	"xusi-projects/xusi-framework/xweb/httplib"
 	"xusi-projects/xusi-framework/xweb/router"
@@ -66,9 +66,9 @@ func registryRouters() {
 				logger.Debug("run route handler -> ", item.Function)
 				// 解析路由参数
 				// 如果包含了真实路径 + "/" 则代表有携带参数
-				if strings.Contains(util.UrlDecoder(request.URL.String()), rHandler.realRoute+"/") {
+				if strings.Contains(xurl.UrlDecoder(request.URL.String()), rHandler.realRoute+"/") {
 					// 取出参数
-					params := strings.Split(strings.ReplaceAll(util.UrlDecoder(request.URL.String()), rHandler.realRoute+"/", ""), "/")
+					params := strings.Split(strings.ReplaceAll(xurl.UrlDecoder(request.URL.String()), rHandler.realRoute+"/", ""), "/")
 					for key, value := range xrouterInstance.routerTable.Table[rHandler.realRoute].Params {
 						index, err := strconv.Atoi(value[0])
 						if err != nil {
@@ -103,7 +103,7 @@ func registryRouters() {
 				logger.MagentaBg, request.Method, logger.Reset,
 				statusColor, strconv.Itoa(ctx.StatusCode), logger.Reset,
 				logger.Yellow, request.Host, logger.Reset,
-				logger.Blue, util.UrlDecoder(request.URL.String()), logger.Reset,
+				logger.Blue, xurl.UrlDecoder(request.URL.String()), logger.Reset,
 			)
 
 			// 如果为dev模式，输出请求详细
