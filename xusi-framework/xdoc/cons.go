@@ -29,4 +29,9 @@ const (
 
 	SIGN_DESCRIBE = "@describe" // 描述标记
 	SIGN_PARAM    = "@param"    // 描述标记
+
+	// 页面属性
+	PAGE_MENU_CONTENT = "{menu-content}" // 内容区菜单
+	PAGE_SLDEBAR      = "{menu-left}"    // 侧边栏
+
 )

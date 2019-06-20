@@ -14,11 +14,18 @@
 
 package model
 
+import (
+	"strings"
+	"xusi-projects/xusi-framework/core/asset"
+)
+
 /* XusiStrcut ->
    @describe 用于支撑XDoc运行的包模型
 */
 type PackageModel struct {
 	Name     string                 // $describe 包名
+	IsRoot   bool                   // $describe 是否为顶级包
+	DirPath  string                 // $describe 包路径
 	Describe string                 // $describe 包描述
 	Const    map[string]ConstModel  // $describe 包内所包含的常量
 	Struct   map[string]StructModel // $describe 包内所包含的结构体
@@ -34,4 +41,19 @@ func (this PackageModel) IsNull() bool {
 	} else {
 		return false
 	}
+}
+
+/* XusiFunc ->
+    @describe 获取package完整路径
+<- End */
+func (this PackageModel) GetPackagePath() string {
+	// 去除文件名称
+	// 并将文件夹名称改为包名
+	slice := strings.Split(strings.ReplaceAll(this.DirPath, "/", "/\\"), "\\")
+	slice = slice[0 : len(slice)-1]
+	result := ""
+	for _, value := range slice {
+		result += value
+	}
+	return strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(result+this.Name, asset.ROOT_PATH, ""), "xusi-projects", ""), "xusi-projects/xusi-framework", "")
 }

@@ -48,6 +48,7 @@ func Build(projectPath string) error {
 	)
 	
 	func init(){
+		asset.ROOT_PATH = "` + strings.ReplaceAll(projectPath, "\\", "/") + `"
 	
 	`
 	for _, xFile := range xFiles {
@@ -85,7 +86,11 @@ func Build(projectPath string) error {
 	}
 
 	// 输出资产go文件
+	// 如果文件存在则删除
 	goTempFile += `}`
+	if util.FileIsExist(projectPath + "/xusi_build.go") {
+		os.Remove(projectPath + "/xusi_build.go")
+	}
 	err := util.WriteToFile(projectPath+"/xusi_build.go", []byte(goTempFile))
 	if err != nil {
 		return err

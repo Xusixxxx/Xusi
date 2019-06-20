@@ -42,4 +42,25 @@ func init() {
 			ctx.StatusCode = httplib.CODE_404
 		}
 	})
+
+	xweb.Get("/favicon.ico", func(ctx *context.Context) {
+		// 找到favicon
+		isOK := false
+		for _, value := range asset.AssetsMenu {
+			if value.Name == "favicon.ico" {
+				logo, err := value.GetContext()
+				if err != nil {
+					ctx.StatusCode = httplib.CODE_500
+				} else {
+					ctx.Http.ResponseWriter.Header().Set("Content-Type", "image/x-icon")
+					ctx.Http.ResponseWriter.Write(logo)
+				}
+				isOK = true
+				break
+			}
+		}
+		if !isOK {
+			ctx.StatusCode = httplib.CODE_404
+		}
+	})
 }

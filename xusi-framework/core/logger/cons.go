@@ -19,10 +19,10 @@ const (
 	MODE_DEV  = "dev"  // &describe 开发环境
 	MODE_PROD = "prod" // &describe 生产环境
 	// 日志级别
-	LEVEL_FATAL = "Fatal" // &describe 致命的错误
-	LEVEL_ERROR = "Error" // &describe 运行期间产生的错误
-	LEVEL_WARN  = "Warn"  // &describe 警告
-	LEVEL_INFO  = "Info"  // &describe 有意义的事件信息
-	LEVEL_DEBUG = "Debug" // &describe 调试信息
-	LEVEL_TRACE = "Trace" // &describe 更详细的跟踪信息
-)
+	LEVEL_FATAL string = "Fatal" // &describe 致命的错误
+	LEVEL_ERROR string = "Error" // &describe 运行期间产生的错误
+	LEVEL_WARN  string = "Warn"  // &describe 警告
+	LEVEL_INFO  string = "Info"  // &describe 有意义的事件信息
+	LEVEL_DEBUG string = "Debug" // &describe 调试信息
+	LEVEL_TRACE string = "Trace" // &describe 更详细的跟踪信息
+) // -< End

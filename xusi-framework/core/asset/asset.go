@@ -17,7 +17,13 @@
 <- End */
 package asset
 
-import "xusi-projects/xusi-framework/core/util"
+import (
+	"strings"
+	"xusi-projects/xusi-framework/core/util"
+)
+
+// xusi build 路径
+var ROOT_PATH = ""
 
 // 资产菜单
 var AssetsMenu map[string]Assets
@@ -35,6 +41,7 @@ type Assets struct {
 	FileName string // $describe 文件名称
 	FileType string // $describe 文件类型
 	FullName string // $describe 完整路径
+	DirPath  string // $describe 所在文件夹
 } // -< End
 
 /* XusiFunc ->
@@ -43,11 +50,12 @@ type Assets struct {
     @param assets Assets 要添加的静态资产模型
 <- End */
 func Add(key string, assets Assets) {
+	assets.DirPath = strings.ReplaceAll(assets.FullName, "/"+assets.FileName, "")
 	AssetsMenu[key] = assets
 }
 
 /* XusiFunc ->
-    @describe 获取静态资产内容，返回 <kbd>[]byte</kbd> 和 <kbd>error</kbd>
+    @describe 获取静态资产内容，返回[]byte和error
 <- End */
 func (assets Assets) GetContext() ([]byte, error) {
 	base64Data, err := util.DecodedBase64(assets.Content)
