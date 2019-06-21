@@ -27,9 +27,6 @@ import (
 // 文档字典
 var Docs = map[string]model.PackageModel{}
 
-// 文档缓存
-var docCache = map[string]string{}
-
 /* XusiFunc ->
     @describe 运行xdoc文档web服务器
     @param port string 监听端口
@@ -49,6 +46,7 @@ func Run(port string) {
 		logger.Info("analysis >> " + assetFile.Name)
 		startAnalysis(content, assetFile)
 	}
+	// 全部文件解析完成后排除多余路径
 
 	// 路由解析
 	router()
@@ -63,7 +61,7 @@ func router() {
 
 	// 加载目录
 	xweb.Get(root, func(ctx *context.Context) {
-		page := RenderMenu(static.PAGE_DOC)
+		page := RenderContent(static.PAGE_DOC)
 		page = RenderSidebar(page)
 
 		ctx.WirteString(page)

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package xdoc
+package static
 
 // 解析常量
 const (
@@ -22,7 +22,6 @@ const (
 	FOOT_STRUCT      = "// -< End"         // struct尾
 	FOOT_CONST_GROUP = "// -< End"         // 常量组尾
 	HEAD_FUNC        = "/* XusiFunc ->"    // func头
-	FOOT_FUNC        = "// -< End"         // func尾
 
 	TAG_CONS = "// &describe" // 常量标签
 	TAG_ATTR = "// $describe" // 属性标签
@@ -31,7 +30,10 @@ const (
 	SIGN_PARAM    = "@param"    // 描述标记
 
 	// 页面属性
-	PAGE_MENU_CONTENT = "{menu-content}" // 内容区菜单
-	PAGE_SLDEBAR      = "{menu-left}"    // 侧边栏
+	PAGE_NAME           = "{xdoc-name}"      // 名称
+	PAGE_MENU_CONTENT   = "{menu-content}"   // 内容区菜单
+	PAGE_SLDEBAR        = "{menu-left}"      // 侧边栏
+	PAGE_DESCRIBE       = "{describe}"       // 页面描述
+	PAGE_DESCRIBE_LABEL = "{describe-label}" // 页面描述标签
 
 )

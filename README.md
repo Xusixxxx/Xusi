@@ -53,7 +53,7 @@ $ go get -u -v github.com/Xusixxxx/Xusi
 
 # 动态
 
-<a href="https://github.com/Xusixxxx/Xusi"><img align="center" style="margin-right:20px;" src="https://github.com/Xusixxxx/Asset/blob/master/xusi-frameword-xdoc-.png" title="xdoc" /></a>
+<a href="https://github.com/Xusixxxx/Xusi"><img align="center" style="margin-right:20px;" src="http://przimj0kd.bkt.clouddn.com/xusi-frameword-xdoc-.png?e=1561033760&token=KTrMT_fnULmylWtMq0WH4htHUN74vKGMcbY1X_j-:U5VqUAlPfs54UdEyvcfpRdNOF1c" title="xdoc" /></a>
 
 
 # 额外的资产

@@ -25,7 +25,9 @@ import (
 	"os"
 	"os/exec"
 	"strings"
-	"xusi-projects/xusi-framework/core/util"
+	"xusi-projects/xusi-framework/core/util/xbase64"
+	"xusi-projects/xusi-framework/core/util/xfile"
+	"xusi-projects/xusi-framework/core/util/xgzip"
 )
 
 // Xusi 构建者接口实现
@@ -38,7 +40,7 @@ func Build(projectPath string) error {
 	// 先获取本项目中所有包含的文件
 	// 记录每个文件的信息
 	// 记录完成后对文件进行加密
-	xFiles := util.GetFilesAll(projectPath)
+	xFiles := xfile.GetFilesAll(projectPath)
 	// 存储资产的go文件内容
 	goTempFile := `
 	package main
@@ -63,12 +65,12 @@ func Build(projectPath string) error {
 		// 输出构建文件信息
 		fmt.Println("building file -> " + strings.ReplaceAll(xFile.FullName, "/", "\\"))
 		// 读取文件内容
-		b, err := util.ReadFileContent(xFile.FullName)
+		b, err := xfile.ReadFileContent(xFile.FullName)
 		if err != nil {
 			return err
 		}
 		// 并加密压缩文件内容
-		gzip, err := util.GZipCompress(b)
+		gzip, err := xgzip.GZipCompress(b)
 		if err != nil {
 			return err
 		}
@@ -76,7 +78,7 @@ func Build(projectPath string) error {
 		goTempFile += `
 		asset.Add("` + strings.ReplaceAll(xFile.FullName, "\\", "/") + `",asset.Assets{
 			Name:		"` + strings.ReplaceAll(xFile.Name, "\\", "/") + `",
-			Content:	"` + util.EncryptBase64(gzip.Next(gzip.Len())) + `",
+			Content:	"` + xbase64.EncryptBase64(gzip.Next(gzip.Len())) + `",
 			FileName:	"` + xFile.Name + `",
 			FileType:	"` + strings.ReplaceAll(xFile.Ext, ".", "") + `",
 			FullName:	"` + strings.ReplaceAll(xFile.FullName, "\\", "/") + `",
@@ -88,10 +90,10 @@ func Build(projectPath string) error {
 	// 输出资产go文件
 	// 如果文件存在则删除
 	goTempFile += `}`
-	if util.FileIsExist(projectPath + "/xusi_build.go") {
+	if xfile.FileIsExist(projectPath + "/xusi_build.go") {
 		os.Remove(projectPath + "/xusi_build.go")
 	}
-	err := util.WriteToFile(projectPath+"/xusi_build.go", []byte(goTempFile))
+	err := xfile.WriteToFile(projectPath+"/xusi_build.go", []byte(goTempFile))
 	if err != nil {
 		return err
 	}

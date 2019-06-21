@@ -6,6 +6,17 @@
 - 修订：Xusixxxx(xusixxxx@gmail.com)
 ****
 
+##### 2019/06/21
+```sh
+1、优化xdoc页面渲染代码，拆分臃肿代码块；
+2、修复了struct属性描述会连带属性名称和类型一同显示的bug；
+3、优化部分代码注释；
+4、调整xusi-framework-core-util目录结构，package更清晰；
+5、新增xdoc配置器，允许自定义内容显示；
+6、修复了xdoc中package引用提示路径错误的问题；
+7、优化xdoc解析代码；
+```
+
 ##### 2019/06/20
 ```sh
 1、新增package模型属性，允许获取包路径及文件路径；

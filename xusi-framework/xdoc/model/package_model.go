@@ -30,6 +30,7 @@ type PackageModel struct {
 	Const    map[string]ConstModel  // $describe 包内所包含的常量
 	Struct   map[string]StructModel // $describe 包内所包含的结构体
 	Func     map[string]FuncModel   // $describe 包内所包含的函数
+	Exclude  []string               // $describe 被排除的会影响包真实引用路径的包名
 } // -< End
 
 /* XusiFunc ->
@@ -55,5 +56,10 @@ func (this PackageModel) GetPackagePath() string {
 	for _, value := range slice {
 		result += value
 	}
-	return strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(result+this.Name, asset.ROOT_PATH, ""), "xusi-projects", ""), "xusi-projects/xusi-framework", "")
+	result = strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(result+this.Name, asset.ROOT_PATH, ""), "xusi-projects", ""), "xusi-projects/xusi-framework", "")
+	// 排除空包
+	for _, packageName := range this.Exclude {
+		result = strings.ReplaceAll(result, "/"+packageName, "")
+	}
+	return result
 }

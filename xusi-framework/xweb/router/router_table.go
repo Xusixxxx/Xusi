@@ -24,7 +24,7 @@ import (
 	"strings"
 	"sync"
 	"xusi-projects/xusi-framework/core/logger"
-	"xusi-projects/xusi-framework/core/util"
+	"xusi-projects/xusi-framework/core/util/xstring"
 	"xusi-projects/xusi-framework/xweb/context"
 	"xusi-projects/xusi-framework/xweb/httplib"
 	"xusi-projects/xusi-framework/xweb/static"
@@ -51,7 +51,7 @@ type RouterTableItem struct {
 	Pattern  string                     // $describe 映射的地址
 	Function func(ctx *context.Context) // $describe 路由处理的函数
 	Exclude  string                     // $describe 被排除的方法链串
-	Params   map[string][]string        // $describe 路由中携带的参数 map[name]{[]string{index, name}}
+	Params   map[string][]string        // $describe 路由中携带的参数 xmap[name]{[]string{index, name}}
 } // -< End
 
 /* XusiFunc ->
@@ -118,16 +118,16 @@ func (routerTable RouterTable) Add(patternTemp string, method []string, function
 	pattern = ""
 	for _, v := range slice {
 		// 如果存在空段，则表示存在 “//”
-		if util.IsEmptyString(v) {
+		if xstring.IsEmptyString(v) {
 			logger.Warn("route exception(exist null slice), may not work : ", patternTemp)
 		}
 		// 获取参数名
 		if strings.Contains(v, "{") && strings.Contains(v, "}") {
 
-			result := util.GetBetweenStr(v, "{", "}")
+			result := xstring.GetBetweenStr(v, "{", "}")
 			ok := true
 			// 如果为空，则表示存在不完整的标识符，可能仅有{，可能仅有}
-			if util.IsEmptyString(result) {
+			if xstring.IsEmptyString(result) {
 				ok = false
 				logger.Warn("route exception(incomplete identifier), may not work : ", patternTemp)
 			}
@@ -140,7 +140,7 @@ func (routerTable RouterTable) Add(patternTemp string, method []string, function
 				params += result + ","
 			}
 		} else {
-			if !util.IsEmptyString(v) {
+			if !xstring.IsEmptyString(v) {
 				pattern += "/" + v
 			}
 		}
@@ -198,7 +198,7 @@ func (routerTable RouterTable) ExcludeFuncByMethod(method string, function func(
 	for _, value := range routerTable.Table {
 		if reflect.ValueOf(function).Pointer() == reflect.ValueOf(value.Function).Pointer() {
 			if !strings.Contains(value.Exclude, method) {
-				value.Exclude = util.MoreSpaceToOnce(strings.TrimSpace(value.Exclude + method + ";"))
+				value.Exclude = xstring.MoreSpaceToOnce(strings.TrimSpace(value.Exclude + method + ";"))
 			}
 		}
 	}
@@ -214,7 +214,7 @@ func (routerTable RouterTable) UNExcludeFuncByMethod(method string, function fun
 	for _, value := range routerTable.Table {
 		if reflect.ValueOf(function).Pointer() == reflect.ValueOf(value.Function).Pointer() {
 			if strings.Contains(value.Exclude, method) {
-				value.Exclude = util.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(value.Exclude, method+";", "")))
+				value.Exclude = xstring.MoreSpaceToOnce(strings.TrimSpace(strings.ReplaceAll(value.Exclude, method+";", "")))
 			}
 		}
 	}

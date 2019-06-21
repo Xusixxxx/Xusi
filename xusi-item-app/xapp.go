@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"os"
 	"time"
-	"xusi-projects/xusi-framework/core/util"
+	"xusi-projects/xusi-framework/core/util/xsys"
 	build2 "xusi-projects/xusi-item-app/build"
 )
 
@@ -54,7 +54,7 @@ func main() {
 		fmt.Print("xusi-app version:" + VERSION)
 	} else if build {
 		fmt.Println("start build xusi app...")
-		runPath, err := util.GetRunPath()
+		runPath, err := xsys.GetRunPath()
 		if err != nil {
 			panic(err)
 		}
