@@ -12,25 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package context
+package amanda
 
-import (
-	"net/http"
+import "xusi-projects/xusi-framework/xweb/router/product/audrey"
+
+var (
+	DEFAULT_ROUTER = audrey.Load() // 默认路由器选型
 )
 
-/* XusiStrcut ->
-   @describe 请求上下文，包含了对Request和ResponseWriter的封装，以及一些特殊属性
-*/
-type Context struct {
-	*http.Request
-	http.ResponseWriter
-	StateCode int // 请求状态码
-} // -< End
+const (
+	DEFAULT_ADDRESS = ""   // &describe 默认地址
+	DEFAULT_PORT    = 8080 // &describe 默认端口
 
-/* XusiFunc ->
-    @describe 将字符串写入响应体
-    @param content string 字符串
-<- End */
-func (ctx *Context) WirteString(content string) {
-	ctx.ResponseWriter.Write([]byte(content))
-}
+) // -< End

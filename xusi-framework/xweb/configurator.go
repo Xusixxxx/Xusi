@@ -12,25 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package context
+// xweb配置器
+package xweb
 
-import (
-	"net/http"
-)
+import "xusi-projects/xusi-framework/xweb/httplibs"
+
+// 配置器实例
+var Conf configurator
+
+// 初始化配置器
+func init() {
+	Conf = configurator{
+		Network: httplibs.NETWORK_TCP4,
+		Address: httplibs.DEFAULT_ADDRESS,
+		Port:    httplibs.DEFAULT_PORT,
+		RunMode: httplibs.RUNMODE_PROD,
+	}
+}
 
 /* XusiStrcut ->
-   @describe 请求上下文，包含了对Request和ResponseWriter的封装，以及一些特殊属性
+   @describe 维持xweb正常运行的配置器
 */
-type Context struct {
-	*http.Request
-	http.ResponseWriter
-	StateCode int // 请求状态码
+type configurator struct {
+	Network string // $describe 网络类型
+	Address string // $describe 监听的地址(默认为空，可指定仅某IP或域名可访问，但不建议)
+	Port    int    // $describe 监听的端口
+	RunMode string // $describe 运行模式
 } // -< End
-
-/* XusiFunc ->
-    @describe 将字符串写入响应体
-    @param content string 字符串
-<- End */
-func (ctx *Context) WirteString(content string) {
-	ctx.ResponseWriter.Write([]byte(content))
-}

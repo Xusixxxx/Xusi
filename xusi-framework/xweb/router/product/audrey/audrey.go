@@ -12,25 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package context
+/* XusiPackage ->
+    @describe 路由器(奥德丽)，完美主义的她希望任何事都做到极致，她会找到指定路由地址下所有允许的内容
+<- End */
+package audrey
 
 import (
 	"net/http"
+	"xusi-projects/xusi-framework/xweb/router/basic"
 )
 
 /* XusiStrcut ->
-   @describe 请求上下文，包含了对Request和ResponseWriter的封装，以及一些特殊属性
+   @describe 路由器结构
 */
-type Context struct {
-	*http.Request
-	http.ResponseWriter
-	StateCode int // 请求状态码
-} // -< End
+type Audrey struct {
+	*basic.Router
+}
 
-/* XusiFunc ->
-    @describe 将字符串写入响应体
-    @param content string 字符串
-<- End */
-func (ctx *Context) WirteString(content string) {
-	ctx.ResponseWriter.Write([]byte(content))
+func (audrey *Audrey) Find(pattern string, request *http.Request) basic.RouteTableItem {
+	return audrey.Router.Table[pattern]
+}
+
+func (audrey *Audrey) Call(routeTableItem basic.RouteTableItem) []func(responseWriter http.ResponseWriter, r *http.Request) {
+	if !routeTableItem.IsNil() {
+		return routeTableItem.Functions
+	} else {
+		return nil
+	}
 }

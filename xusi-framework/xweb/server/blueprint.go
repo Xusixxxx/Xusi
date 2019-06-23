@@ -12,25 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package context
-
-import (
-	"net/http"
-)
-
-/* XusiStrcut ->
-   @describe 请求上下文，包含了对Request和ResponseWriter的封装，以及一些特殊属性
-*/
-type Context struct {
-	*http.Request
-	http.ResponseWriter
-	StateCode int // 请求状态码
-} // -< End
-
-/* XusiFunc ->
-    @describe 将字符串写入响应体
-    @param content string 字符串
+/* XusiPackage ->
+    @describe Network Server蓝图，可根据该蓝图打造各式各样的Network Server
 <- End */
-func (ctx *Context) WirteString(content string) {
-	ctx.ResponseWriter.Write([]byte(content))
+package server
+
+type Blueprint interface {
+	// 运行Network Server
+	Run([]string)
+}
+
+func Run(blueprint Blueprint, params ...string) {
+	blueprint.Run(params)
 }

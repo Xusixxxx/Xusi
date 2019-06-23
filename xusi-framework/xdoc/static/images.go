@@ -17,8 +17,7 @@ package static
 import (
 	"xusi-projects/xusi-framework/core/asset"
 	"xusi-projects/xusi-framework/xweb"
-	"xusi-projects/xusi-framework/xweb/context"
-	"xusi-projects/xusi-framework/xweb/httplib"
+	"xusi-projects/xusi-framework/xweb/httplibs"
 )
 
 func init() {
@@ -38,14 +37,14 @@ func init() {
 		FullName: "C:/Users/Xusixxxx/Documents/Sources/golang/src/xusi-projects/xusi-framework/xdoc/static/favicon.ico",
 	})
 
-	xweb.Get("/logo", func(ctx *context.Context) {
+	xweb.Get("/logo", func(ctx *xweb.Context) {
 		// 找到Logo
 		isOK := false
 		for _, value := range asset.AssetsMenu {
 			if value.Name == "logo-xdoc.png" {
 				logo, err := value.GetContext()
 				if err != nil {
-					ctx.StatusCode = httplib.CODE_500
+					ctx.StatusCode = httplibs.CODE_500
 				} else {
 					ctx.Http.ResponseWriter.Header().Set("Content-Type", "image/gif")
 					ctx.Http.ResponseWriter.Write(logo)
@@ -55,18 +54,18 @@ func init() {
 			}
 		}
 		if !isOK {
-			ctx.StatusCode = httplib.CODE_404
+			ctx.StatusCode = httplibs.CODE_404
 		}
 	})
 
-	xweb.Get("/favicon.ico", func(ctx *context.Context) {
+	xweb.Get("/favicon.ico", func(ctx *xweb.Context) {
 		// 找到favicon
 		isOK := false
 		for _, value := range asset.AssetsMenu {
 			if value.Name == "favicon.ico" {
 				logo, err := value.GetContext()
 				if err != nil {
-					ctx.StatusCode = httplib.CODE_500
+					ctx.StatusCode = httplibs.CODE_500
 				} else {
 					ctx.Http.ResponseWriter.Header().Set("Content-Type", "image/x-icon")
 					ctx.Http.ResponseWriter.Write(logo)
@@ -76,7 +75,7 @@ func init() {
 			}
 		}
 		if !isOK {
-			ctx.StatusCode = httplib.CODE_404
+			ctx.StatusCode = httplibs.CODE_404
 		}
 	})
 }

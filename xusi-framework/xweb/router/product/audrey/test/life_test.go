@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// context解析
-package context
+package test
 
-func (ctx Context) f() {
+import (
+	"testing"
+	audrey2 "xusi-projects/xusi-framework/xweb/router/product/audrey"
+)
 
+func TestLoad(t *testing.T) {
+	t.Log(audrey2.Load())
 }

@@ -18,11 +18,11 @@ import (
 	"xusi-projects/xusi-framework/core/logger"
 	"xusi-projects/xusi-framework/xdoc"
 	"xusi-projects/xusi-framework/xweb"
-	"xusi-projects/xusi-framework/xweb/httplib"
+	"xusi-projects/xusi-framework/xweb/httplibs"
 )
 
 func main() {
 	logger.Conf.Disable = true
-	xweb.SetRunMode(httplib.RUNMODE_PROD)
+	xweb.SetRunMode(httplibs.RUNMODE_PROD)
 	xdoc.Run("9999")
 }

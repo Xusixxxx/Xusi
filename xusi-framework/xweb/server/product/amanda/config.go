@@ -12,25 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package context
+package amanda
 
 import (
-	"net/http"
+	"xusi-projects/xusi-framework/xweb/router"
+	"xusi-projects/xusi-framework/xweb/server/basic"
 )
 
-/* XusiStrcut ->
-   @describe 请求上下文，包含了对Request和ResponseWriter的封装，以及一些特殊属性
-*/
-type Context struct {
-	*http.Request
-	http.ResponseWriter
-	StateCode int // 请求状态码
-} // -< End
-
-/* XusiFunc ->
-    @describe 将字符串写入响应体
-    @param content string 字符串
-<- End */
-func (ctx *Context) WirteString(content string) {
-	ctx.ResponseWriter.Write([]byte(content))
+type Config struct {
+	*basic.Config
+	Router router.Blueprint // 路由器选型
 }

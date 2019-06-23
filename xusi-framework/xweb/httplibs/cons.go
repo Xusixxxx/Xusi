@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// xweb 所有使用到的常量
-package httplib
+package httplibs
 
 const (
 	// 默认参数
-	DEFAULT_ADDRESS = "8080"
+	DEFAULT_ADDRESS = ""
+	DEFAULT_PORT    = 8080
 
 	// 运行模式
 	RUNMODE_PROD = "prod"

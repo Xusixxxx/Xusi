@@ -12,25 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package context
+package basic
 
-import (
-	"net/http"
-)
-
-/* XusiStrcut ->
-   @describe 请求上下文，包含了对Request和ResponseWriter的封装，以及一些特殊属性
-*/
-type Context struct {
-	*http.Request
-	http.ResponseWriter
-	StateCode int // 请求状态码
-} // -< End
-
-/* XusiFunc ->
-    @describe 将字符串写入响应体
-    @param content string 字符串
-<- End */
-func (ctx *Context) WirteString(content string) {
-	ctx.ResponseWriter.Write([]byte(content))
+type Config struct {
+	Network string // 网络类型
+	Address string // 地址
+	Port    int    // 端口
+	RunMode string // 运行模式
 }

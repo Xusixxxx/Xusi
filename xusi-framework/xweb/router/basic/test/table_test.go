@@ -12,25 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package context
+package test
 
 import (
-	"net/http"
+	"testing"
+	"xusi-projects/xusi-framework/xweb/router/basic"
 )
 
-/* XusiStrcut ->
-   @describe 请求上下文，包含了对Request和ResponseWriter的封装，以及一些特殊属性
-*/
-type Context struct {
-	*http.Request
-	http.ResponseWriter
-	StateCode int // 请求状态码
-} // -< End
-
-/* XusiFunc ->
-    @describe 将字符串写入响应体
-    @param content string 字符串
-<- End */
-func (ctx *Context) WirteString(content string) {
-	ctx.ResponseWriter.Write([]byte(content))
+func TestRouteTableItem(t *testing.T) {
+	table := map[string]basic.RouteTableItem{}
+	table["1"] = basic.RouteTableItem{}
+	table["3"] = basic.RouteTableItem{Patterns: []string{"123"}}
+	t.Log(table["1"])
+	t.Log(table["1"].Methods, len(table["1"].Methods))
+	t.Log(table["2"])
+	t.Log(table["1"].IsNil(), table["2"].IsNil(), table["3"].IsNil())
 }

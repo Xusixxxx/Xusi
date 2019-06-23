@@ -12,25 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package context
+package util
 
 import (
 	"net/http"
+	"xusi-projects/xusi-framework/xweb/router/basic"
 )
 
-/* XusiStrcut ->
-   @describe 请求上下文，包含了对Request和ResponseWriter的封装，以及一些特殊属性
-*/
-type Context struct {
-	*http.Request
-	http.ResponseWriter
-	StateCode int // 请求状态码
-} // -< End
-
 /* XusiFunc ->
-    @describe 将字符串写入响应体
-    @param content string 字符串
+    @describe 检查在路由器中方法是否被允许
+    @param router basic.Router 路由器
+    @param pattern string 路由地址
+    @param request *http.Request HTTP请求
 <- End */
-func (ctx *Context) WirteString(content string) {
-	ctx.ResponseWriter.Write([]byte(content))
+func CheckMethod(router *basic.Router, pattern string, request *http.Request) bool {
+	isPass := false
+	for _, method := range router.Table[pattern].Methods {
+		if method == request.Method {
+			isPass = true
+			break
+		}
+	}
+	return isPass
 }

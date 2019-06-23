@@ -12,25 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package context
+package basic
 
-import (
-	"net/http"
-)
-
-/* XusiStrcut ->
-   @describe 请求上下文，包含了对Request和ResponseWriter的封装，以及一些特殊属性
-*/
-type Context struct {
-	*http.Request
-	http.ResponseWriter
-	StateCode int // 请求状态码
-} // -< End
+// 路由器表成员结构
+type RouteTableItem struct {
+	Patterns  Patterns  // 映射的地址
+	Methods   Methods   // 接受的方法类型
+	Functions Functions // 路由处理的函数
+}
 
 /* XusiFunc ->
-    @describe 将字符串写入响应体
-    @param content string 字符串
+    @describe 检查该路由成员是否为空
 <- End */
-func (ctx *Context) WirteString(content string) {
-	ctx.ResponseWriter.Write([]byte(content))
+func (routeTableItem RouteTableItem) IsNil() bool {
+	return len(routeTableItem.Methods) == 0 && len(routeTableItem.Functions) == 0 && len(routeTableItem.Patterns) == 0
 }

@@ -12,26 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// xweb 配置文件
-// application的执行需要依靠config
-package xweb
+package basic
 
-import (
-	"xusi-projects/xusi-framework/xweb/httplib"
-)
-
-var conf config
-
-func init() {
-	conf = config{
-		network: httplib.NETWORK_TCP4,
-		address: httplib.DEFAULT_ADDRESS,
-		mode:    httplib.RUNMODE_PROD,
-	}
-}
-
-type config struct {
-	network string // 使用网络类型
-	address string // 监听的地址
-	mode    string // 运行模式
+type Server struct {
 }

@@ -12,25 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package context
+package main
 
 import (
-	"net/http"
+	"xusi-projects/xusi-framework/xweb/router"
+	"xusi-projects/xusi-framework/xweb/router/product/audrey"
 )
 
-/* XusiStrcut ->
-   @describe 请求上下文，包含了对Request和ResponseWriter的封装，以及一些特殊属性
-*/
-type Context struct {
-	*http.Request
-	http.ResponseWriter
-	StateCode int // 请求状态码
-} // -< End
-
-/* XusiFunc ->
-    @describe 将字符串写入响应体
-    @param content string 字符串
-<- End */
-func (ctx *Context) WirteString(content string) {
-	ctx.ResponseWriter.Write([]byte(content))
+func main() {
+	router.LoadRouter(audrey.Audrey{})
 }

@@ -12,21 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// xweb应用程序
-// xweb的应用程序
-// 对xweb进行统一的管理
 package xweb
 
 import (
 	"net"
 	"net/http"
+	"strconv"
 	"xusi-projects/xusi-framework/core/logger"
 )
 
-// xweb应用程序示例
+// xweb应用程序实例
 var app *application
 
-// 初始化xweb应用程序
 func init() {
 	app = &application{
 		Server:   &http.Server{},
@@ -43,20 +40,17 @@ type application struct {
 // 监听网络
 // network：监听的网络类型 tcp ...
 // address：监听的网络端口
-func listen(params ...string) {
+func listen() {
 	endRunning := make(chan bool, 1)
 
 	go func() {
-
-		if len(params) != 0 {
-			conf.network = params[0]
-			conf.address = params[1]
-		}
-
-		//启动一个 http server
-		listener, err := net.Listen(conf.network, ":"+conf.address)
+		// 注册路由器函数
+		http.Handle("/", &requestHandler{})
+		// 启动一个 http server
+		address := Conf.Address + ":" + strconv.Itoa(Conf.Port)
+		listener, err := net.Listen(Conf.Network, address)
 		logger.Info("xusi http server running...")
-		logger.Info("address in http server is ->", logger.Cyan, conf.address+"("+conf.network+")", logger.Reset)
+		logger.Info("address in http server is ->", logger.Cyan, address+"("+Conf.Network+")", logger.Reset)
 		if err != nil {
 			endRunning <- true
 			return

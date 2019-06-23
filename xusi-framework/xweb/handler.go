@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// xweb请求处理者
 package xweb
 
 import (
@@ -21,19 +20,122 @@ import (
 	"strings"
 	"xusi-projects/xusi-framework/core/logger"
 	"xusi-projects/xusi-framework/core/util/xurl"
-	"xusi-projects/xusi-framework/xweb/context"
-	"xusi-projects/xusi-framework/xweb/httplib"
+	"xusi-projects/xusi-framework/xweb/httplibs"
+	"xusi-projects/xusi-framework/xweb/static"
 )
 
 // 请求处理者
 type requestHandler struct {
-	*context.Context
-	realRoute string // 真实路由，解析后访问的最终路由
+	*context                // 请求上下文
+	RealRouteAddress string // 真实路由地址
 }
 
-// 统一函数处理
-// 所有函数都将经过这个
-func (r *requestHandler) serveHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+// 初始化请求处理者
+func (requestHandler *requestHandler) init(responseWriter http.ResponseWriter, request *http.Request) {
+	requestHandler.context = &context{
+		Http: struct {
+			*http.Request
+			http.ResponseWriter
+		}{request, responseWriter},
+		StatusCode:   httplibs.CODE_200,
+		RouterParams: map[string]string{},
+	}
+}
+
+// HTTP招待
+// 所有的HTTP均经过此处进行处理
+func (requestHandler *requestHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+	// 初始化请求处理者
+	requestHandler.init(responseWriter, request)
+	// 对请求的URL进行解析
+	// 获取URL中携带的路由参数
+	// 对路由进行校验
+	// 构建请求者
+	url := requestHandler.analysisURL(request)
+	requestHandler.analysisRouteParames(url)
+	if requestHandler.routeRuleCheck(url, request) == httplibs.CODE_200 {
+		// 解析From表单
+		request.ParseForm()
+		xWeb.router.Table[requestHandler.RealRouteAddress].Function(requestHandler.context)
+	} else {
+		switch requestHandler.context.StatusCode {
+		case httplibs.CODE_404:
+			requestHandler.context.Http.ResponseWriter.Write([]byte(static.PAGE_404))
+		case httplibs.CODE_500:
+			requestHandler.context.Http.ResponseWriter.Write([]byte(static.PAGE_500))
+		}
+	}
+	requestHandler.printRequestInfo(requestHandler.context, request)
+}
+
+// 请求结果打印
+func (requestHandler *requestHandler) printRequestInfo(ctx *context, request *http.Request) {
+	var statusColor string
+	switch ctx.StatusCode {
+	case httplibs.CODE_200:
+		statusColor = logger.GreenBg
+	case httplibs.CODE_301, httplibs.CODE_302, httplibs.CODE_304, httplibs.CODE_307:
+		statusColor = logger.YellowBg
+	default:
+		statusColor = logger.RedBg
+	}
+	logger.Info(
+		logger.MagentaBg, request.Method, logger.Reset,
+		statusColor, strconv.Itoa(ctx.StatusCode), logger.Reset,
+		logger.Yellow, request.Host, logger.Reset,
+		logger.Blue, xurl.UrlDecoder(request.URL.String()), logger.Reset,
+	)
+
+	// 如果为dev模式，输出请求详细
+	if Conf.RunMode == httplibs.RUNMODE_DEV {
+		var headerInfo, fromInfo string
+		if len(request.Header) > 0 {
+			for k, v := range request.Header {
+				headerInfo += "\t" + k + " = " + v[0] + "\n"
+			}
+		}
+		request.ParseForm()
+		if len(request.Form) > 0 {
+			for k, v := range request.Form {
+				fromInfo += "\t" + k + " = " + v[0] + "\n"
+			}
+		}
+		logger.Debug(
+			logger.Yellow, "xusi http request info :\nHeader >>\n"+headerInfo, logger.Reset,
+			logger.Yellow, "\nFrom >>\n"+fromInfo, logger.Reset,
+		)
+	}
+}
+
+// 路由规则校验，返回状态码
+func (requestHandler *requestHandler) routeRuleCheck(url string, request *http.Request) int {
+	if _, ok := xWeb.router.Table[url]; ok {
+		// 是否通过
+		isPass := false
+		logger.Debug("check route : " + xurl.UrlDecoder(url))
+		// 遍历所有该路由所支持的方法
+		for _, value := range xWeb.router.Table[url].Method {
+			logger.Debug("router take in method : ", value, ", input method : ", request.Method)
+			// 如果找到对应被允许的方法，那么则通过验证
+			if value == request.Method {
+				isPass = true
+				logger.Debug("verification by")
+				break
+			}
+		}
+		if isPass == false {
+			logger.Debug("fail verification")
+			requestHandler.StatusCode = httplibs.CODE_415
+		}
+	} else {
+		logger.Debug("not found route : " + xurl.UrlDecoder(request.URL.String()))
+		requestHandler.StatusCode = httplibs.CODE_404
+	}
+	return requestHandler.StatusCode
+}
+
+// 解析URL，防止请求被拒
+func (requestHandler *requestHandler) analysisURL(request *http.Request) string {
 	// 如果请求的方法不被允许或不存在
 	// 解析url，避免被拒
 	key := xurl.UrlDecoder(request.URL.String())
@@ -45,19 +147,24 @@ func (r *requestHandler) serveHTTP(responseWriter http.ResponseWriter, request *
 	if strings.Contains(key, "?") {
 		key = strings.Split(key, "?")[0]
 	}
+	return key
+}
 
+// 解析路由参数
+func (requestHandler *requestHandler) analysisRouteParames(url string) {
+	// 首先检查是否为正常url
 	// 如果未携带任何参数，但是绑定了带参数的路由
 	// 那么应该请求到空参数的路由函数
 	// 否则则视为有参数，进入解析
-	if _, ok := xrouterInstance.routerTable.Table[key]; ok {
-		r.realRoute = key
+	if _, ok := xWeb.router.Table[url]; ok {
+		requestHandler.RealRouteAddress = url
 	} else {
 		// 解析路由参数
 		// 取到每一段切片，并排除第一段空切片
-		slice := strings.Split(key, "/")
+		slice := strings.Split(url, "/")
 		slice = slice[1:len(slice)]
 		// 遍历所有路由进行比对
-		for k, v := range xrouterInstance.routerTable.Table {
+		for k, v := range xWeb.router.Table {
 			// 对遍历的pattern切片
 			// 属性拼接再切片
 			kTemp := k
@@ -90,7 +197,7 @@ func (r *requestHandler) serveHTTP(responseWriter http.ResponseWriter, request *
 						// 如果不为属性段，则匹配是否相同
 						if isParamSlice {
 							paramI++
-							key = strings.ReplaceAll(key, "/"+slice[i], "")
+							url = strings.ReplaceAll(url, "/"+slice[i], "")
 						} else {
 							if slice[i] != rs {
 								break
@@ -100,34 +207,7 @@ func (r *requestHandler) serveHTTP(responseWriter http.ResponseWriter, request *
 				}
 			}
 		}
-		r.realRoute = key
+		requestHandler.RealRouteAddress = url
+		logger.Debug("parse url >> " + url)
 	}
-	logger.Debug("route params parse url : " + key)
-	logger.Debug("parse url >> " + key)
-	if _, ok := xrouterInstance.routerTable.Table[key]; ok {
-		// 是否通过
-		isPass := false
-		logger.Debug("check route : " + xurl.UrlDecoder(key))
-		// 遍历所有该路由所支持的方法
-		for _, value := range xrouterInstance.routerTable.Table[key].Method {
-			logger.Debug("router take in method : ", value, ", input method : ", request.Method)
-			// 如果找到对应被允许的方法，那么则通过验证
-			if value == request.Method {
-				isPass = true
-				logger.Debug("verification by")
-				break
-			}
-		}
-		if isPass == false {
-			logger.Debug("fail verification")
-			r.StatusCode = httplib.CODE_415
-		}
-	} else {
-		logger.Debug("not found route : " + xurl.UrlDecoder(request.URL.String()))
-		r.StatusCode = httplib.CODE_404
-	}
-
-	// 解析From表单
-	request.ParseForm()
-
 }
