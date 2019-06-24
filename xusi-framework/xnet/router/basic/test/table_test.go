@@ -12,17 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package test
 
 import (
-	"xusi-projects/xusi-framework/core/logger"
-	"xusi-projects/xusi-framework/xdoc"
-	"xusi-projects/xusi-framework/xnet"
-	"xusi-projects/xusi-framework/xnet/httplibs"
+	"testing"
+	"xusi-projects/xusi-framework/xnet/router/basic"
 )
 
-func main() {
-	logger.Conf.Disable = true
-	xnet.SetRunMode(httplibs.RUNMODE_PROD)
-	xdoc.Run("9999")
+func TestRouteTableItem(t *testing.T) {
+	table := map[string]basic.RouteTableItem{}
+	table["1"] = basic.RouteTableItem{}
+	table["3"] = basic.RouteTableItem{Patterns: []string{"123"}}
+	t.Log(table["1"])
+	t.Log(table["1"].Methods, len(table["1"].Methods))
+	t.Log(table["2"])
+	t.Log(table["1"].IsNil(), table["2"].IsNil(), table["3"].IsNil())
 }

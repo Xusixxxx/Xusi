@@ -20,7 +20,7 @@ import (
 	"xusi-projects/xusi-framework/xdoc/model"
 	"xusi-projects/xusi-framework/xdoc/static"
 	"xusi-projects/xusi-framework/xdoc/xdoc_util"
-	"xusi-projects/xusi-framework/xweb"
+	"xusi-projects/xusi-framework/xnet"
 )
 
 // 文档字典
@@ -50,7 +50,7 @@ func Run(port string) {
 	// 路由解析
 	router()
 	// 启动web服务
-	xweb.Run(port)
+	xnet.Run(port)
 }
 
 // 生成文档路由
@@ -59,7 +59,7 @@ func router() {
 	root := "/"
 
 	// 加载目录
-	xweb.Get(root, func(ctx *xweb.Context) {
+	xnet.Get(root, func(ctx *xnet.Context) {
 		page := RenderContent(static.PAGE_DOC)
 		page = RenderSidebar(page)
 

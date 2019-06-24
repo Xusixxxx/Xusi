@@ -16,8 +16,8 @@ package static
 
 import (
 	"xusi-projects/xusi-framework/core/asset"
-	"xusi-projects/xusi-framework/xweb"
-	"xusi-projects/xusi-framework/xweb/httplibs"
+	"xusi-projects/xusi-framework/xnet"
+	"xusi-projects/xusi-framework/xnet/httplibs"
 )
 
 func init() {
@@ -37,7 +37,7 @@ func init() {
 		FullName: "C:/Users/Xusixxxx/Documents/Sources/golang/src/xusi-projects/xusi-framework/xdoc/static/favicon.ico",
 	})
 
-	xweb.Get("/logo", func(ctx *xweb.Context) {
+	xnet.Get("/logo", func(ctx *xnet.Context) {
 		// 找到Logo
 		isOK := false
 		for _, value := range asset.AssetsMenu {
@@ -58,7 +58,7 @@ func init() {
 		}
 	})
 
-	xweb.Get("/favicon.ico", func(ctx *xweb.Context) {
+	xnet.Get("/favicon.ico", func(ctx *xnet.Context) {
 		// 找到favicon
 		isOK := false
 		for _, value := range asset.AssetsMenu {

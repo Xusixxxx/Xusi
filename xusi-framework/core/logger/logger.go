@@ -68,15 +68,6 @@ func Error(a ...interface{}) {
 		return
 	}
 	format(LEVEL_ERROR, a)
-	var buf [2 << 10]byte
-	// 去除第二三行
-	result := ""
-	for i, line := range strings.Split(string(buf[:runtime.Stack(buf[:], true)]), "\n") {
-		if i != 1 && i != 2 {
-			result += line + "\n"
-		}
-	}
-	fmt.Print(Red, result, Reset)
 }
 
 /* XusiFunc ->

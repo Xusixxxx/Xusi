@@ -12,17 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+/* XusiPackage ->
+    @describe Network Server蓝图，可根据该蓝图打造各式各样的Network Server
+<- End */
+package server
 
-import (
-	"xusi-projects/xusi-framework/core/logger"
-	"xusi-projects/xusi-framework/xdoc"
-	"xusi-projects/xusi-framework/xnet"
-	"xusi-projects/xusi-framework/xnet/httplibs"
-)
+type Blueprint interface {
+	// 运行Network Server
+	Run([]string)
+	RunMode([]string) string
+}
 
-func main() {
-	logger.Conf.Disable = true
-	xnet.SetRunMode(httplibs.RUNMODE_PROD)
-	xdoc.Run("9999")
+func Run(blueprint Blueprint, params ...string) {
+	blueprint.Run(params)
+}
+
+func RunMode(blueprint Blueprint, mode ...string) string {
+	return blueprint.RunMode(mode)
 }

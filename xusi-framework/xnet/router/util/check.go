@@ -12,17 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package util
 
 import (
-	"xusi-projects/xusi-framework/core/logger"
-	"xusi-projects/xusi-framework/xdoc"
-	"xusi-projects/xusi-framework/xnet"
-	"xusi-projects/xusi-framework/xnet/httplibs"
+	"net/http"
+	"xusi-projects/xusi-framework/xnet/router/basic"
 )
 
-func main() {
-	logger.Conf.Disable = true
-	xnet.SetRunMode(httplibs.RUNMODE_PROD)
-	xdoc.Run("9999")
+/* XusiFunc ->
+    @describe 检查在路由器中方法是否被允许
+    @param router basic.Router 路由器
+    @param pattern string 路由地址
+    @param request *http.Request HTTP请求
+<- End */
+func CheckMethod(router *basic.Router, pattern string, request *http.Request) bool {
+	isPass := false
+	for _, method := range router.Table[pattern].Methods {
+		if method == request.Method {
+			isPass = true
+			break
+		}
+	}
+	return isPass
 }

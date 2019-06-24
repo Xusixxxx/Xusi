@@ -12,17 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package basic
 
 import (
-	"xusi-projects/xusi-framework/core/logger"
-	"xusi-projects/xusi-framework/xdoc"
-	"xusi-projects/xusi-framework/xnet"
-	"xusi-projects/xusi-framework/xnet/httplibs"
+	"sync"
 )
 
-func main() {
-	logger.Conf.Disable = true
-	xnet.SetRunMode(httplibs.RUNMODE_PROD)
-	xdoc.Run("9999")
+// 路由器结构
+type Router struct {
+	sync.RWMutex                           // 读写锁(通常用于守护路由器内部读写安全)
+	Table        map[string]RouteTableItem // 通用基础路由表
 }

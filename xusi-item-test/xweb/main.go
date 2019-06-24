@@ -15,10 +15,43 @@
 package main
 
 import (
-	"xusi-projects/xusi-framework/xweb/router"
-	"xusi-projects/xusi-framework/xweb/router/product/audrey"
+	"xusi-projects/xusi-framework/xnet"
+	"xusi-projects/xusi-framework/xnet/context"
+	"xusi-projects/xusi-framework/xnet/router"
+	"xusi-projects/xusi-framework/xnet/router/product/audrey"
+	"xusi-projects/xusi-framework/xnet/server"
+	"xusi-projects/xusi-framework/xnet/server/product/amanda"
 )
 
+func init() {
+	xnet.Init(server.Blueprint(amanda.Load()), router.Blueprint(audrey.Load()))
+}
+
 func main() {
-	router.LoadRouter(audrey.Audrey{})
+	xnet.Load().Get("/hello", func(context *context.Context) {
+		context.XWriteString("Hello")
+	})
+	xnet.Load().Get("/hello", func(context *context.Context) {
+		context.XWriteString("Hello1")
+	})
+	xnet.Load().Get("/test", testXNet)
+	xnet.Load().Get("/test2", func(context *context.Context) {
+		context.XWriteString("test")
+	})
+	xnet.Load().Get("/", func(i *context.Context) {
+		i.XWriteString("nihao")
+	})
+
+	xnet.Load().Run("80")
+
+}
+
+func testXNet(context *context.Context) {
+	context.XWriteJSON(struct {
+		Name string `json:"name"`
+		age  int    `json:"age"`
+	}{
+		Name: "小明",
+		age:  15,
+	})
 }

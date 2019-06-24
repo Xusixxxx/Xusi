@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+/* XusiPackage ->
+    @describe 路由器(奥德丽)，完美主义的她希望任何事都做到极致，她会找到指定路由地址下所有允许的内容
+<- End */
+package audrey
 
 import (
-	"xusi-projects/xusi-framework/core/logger"
-	"xusi-projects/xusi-framework/xdoc"
-	"xusi-projects/xusi-framework/xnet"
-	"xusi-projects/xusi-framework/xnet/httplibs"
+	"xusi-projects/xusi-framework/xnet/router/basic"
 )
 
-func main() {
-	logger.Conf.Disable = true
-	xnet.SetRunMode(httplibs.RUNMODE_PROD)
-	xdoc.Run("9999")
+/* XusiStrcut ->
+   @describe 路由器结构
+*/
+type Audrey struct {
+	*basic.Router
 }
