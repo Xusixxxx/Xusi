@@ -18,11 +18,11 @@ import (
 	"xusi-projects/xusi-framework/core/logger"
 	"xusi-projects/xusi-framework/xdoc"
 	"xusi-projects/xusi-framework/xnet"
-	"xusi-projects/xusi-framework/xnet/httplibs"
+	"xusi-projects/xusi-framework/xnet/server/basic"
 )
 
 func main() {
 	logger.Conf.Disable = true
-	xnet.SetRunMode(httplibs.RUNMODE_PROD)
+	xnet.RunMode(basic.RUN_MODE_PROD)
 	xdoc.Run("9999")
 }

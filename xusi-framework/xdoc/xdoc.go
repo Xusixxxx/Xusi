@@ -21,10 +21,20 @@ import (
 	"xusi-projects/xusi-framework/xdoc/static"
 	"xusi-projects/xusi-framework/xdoc/xdoc_util"
 	"xusi-projects/xusi-framework/xnet"
+	"xusi-projects/xusi-framework/xnet/context"
+	xrouter "xusi-projects/xusi-framework/xnet/router"
+	"xusi-projects/xusi-framework/xnet/router/product/audrey"
+	"xusi-projects/xusi-framework/xnet/server"
+	"xusi-projects/xusi-framework/xnet/server/product/amanda"
 )
 
 // 文档字典
 var Docs = map[string]model.PackageModel{}
+
+func init() {
+	xnet.Init(server.Blueprint(amanda.Load()), xrouter.Blueprint(audrey.Load()))
+	static.InitImage()
+}
 
 /* XusiFunc ->
     @describe 运行xdoc文档web服务器
@@ -50,7 +60,7 @@ func Run(port string) {
 	// 路由解析
 	router()
 	// 启动web服务
-	xnet.Run(port)
+	xnet.Load().Run(port)
 }
 
 // 生成文档路由
@@ -59,10 +69,10 @@ func router() {
 	root := "/"
 
 	// 加载目录
-	xnet.Get(root, func(ctx *xnet.Context) {
+	xnet.Load().Get(root, func(ctx *context.Context) {
 		page := RenderContent(static.PAGE_DOC)
 		page = RenderSidebar(page)
 
-		ctx.WirteString(page)
+		ctx.XWriteString(page)
 	})
 }
