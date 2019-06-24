@@ -6,6 +6,14 @@
 - 修订：Xusixxxx(xusixxxx@gmail.com)
 ****
 
+##### 2019/06/25
+```sh
+1、完成XNet原始版本开发；
+2、完成amanda和audrey开发；
+3、取消默认路由"/"的注册，改为内置页面；
+4、优化SeverHandler处理函数。
+```
+
 ##### 2019/06/23
 ```sh
 1、创建router-audrey项目；

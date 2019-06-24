@@ -47,8 +47,8 @@ $ go get -u -v github.com/Xusixxxx/Xusi
 ##### [xusi-framework-xdoc](https://github.com/Xusixxxx/Xusi/tree/master/xusi-framework/xdoc)
 ###### `describe`：Xusi Framework 文档，将静态文件编译到程序中。可对编码进行分析，生成文档。需搭配`xusi-item-app`使用。
 ##
-##### [xusi-framework-xweb](https://github.com/Xusixxxx/Xusi/tree/master/xusi-framework/xweb)
-###### `describe`：Xusi Framework WEB，Web开发框架
+##### [xusi-framework-xnet](https://github.com/Xusixxxx/Xusi/tree/master/xusi-framework/xnet)
+###### `describe`：Xusi Framework 网络，启用蓝图概念，对网络组件提供支撑
 ##
 
 # 动态
