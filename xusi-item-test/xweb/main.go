@@ -15,12 +15,12 @@
 package main
 
 import (
+	"xusi-projects/xusi-framework/core/net/context"
+	"xusi-projects/xusi-framework/core/net/router"
+	"xusi-projects/xusi-framework/core/net/router/product/audrey"
+	"xusi-projects/xusi-framework/core/net/server"
+	"xusi-projects/xusi-framework/core/net/server/product/amanda"
 	"xusi-projects/xusi-framework/xnet"
-	"xusi-projects/xusi-framework/xnet/context"
-	"xusi-projects/xusi-framework/xnet/router"
-	"xusi-projects/xusi-framework/xnet/router/product/audrey"
-	"xusi-projects/xusi-framework/xnet/server"
-	"xusi-projects/xusi-framework/xnet/server/product/amanda"
 )
 
 func init() {

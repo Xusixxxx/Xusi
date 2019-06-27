@@ -4,7 +4,7 @@
 
 ### 介绍（Introduce）
  
- xusi-framework-xdoc用于为项目快捷搭建一个基于xweb的开发文档HTTP Server。
+ xusi-framework-xdoc用于为项目快捷搭建一个基于xnet的开发文档HTTP Server。
 
 ### 代码（Code）
 在项目路径下，建立一个名为`xdoc.go`的文件，并写入`main`函数：

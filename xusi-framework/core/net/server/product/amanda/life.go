@@ -12,17 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package amanda
 
 import (
-	"xusi-projects/xusi-framework/core/logger"
-	"xusi-projects/xusi-framework/core/net/server/basic"
-	"xusi-projects/xusi-framework/xdoc"
-	"xusi-projects/xusi-framework/xnet"
+	"net/http"
+	"xusi-projects/xusi-framework/core/net/httplibs"
+	basic2 "xusi-projects/xusi-framework/core/net/server/basic"
 )
 
-func main() {
-	logger.Conf.Disable = true
-	xnet.RunMode(basic.RUN_MODE_PROD)
-	xdoc.Run("9999")
+var server *Amanda
+
+func init() {
+	server = &Amanda{
+		Server: &basic2.Server{},
+		Config: &Config{
+			Config: &basic2.Config{
+				Network: httplibs.NETWORK_TCP4,
+				Address: DEFAULT_ADDRESS,
+				Port:    DEFAULT_PORT,
+				RunMode: basic2.DEFAULT_RUN_MODE,
+			},
+		},
+		HttpServer: &http.Server{},
+		Handlers:   &requestHandler{},
+	}
+}
+
+func Load() *Amanda {
+	return server
 }

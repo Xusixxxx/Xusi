@@ -18,8 +18,8 @@ import (
 	"reflect"
 	"sync"
 	"xusi-projects/xusi-framework/core/logger"
-	"xusi-projects/xusi-framework/xnet/router"
-	"xusi-projects/xusi-framework/xnet/server"
+	"xusi-projects/xusi-framework/core/net/router"
+	"xusi-projects/xusi-framework/core/net/server"
 )
 
 // xnet实例
@@ -37,6 +37,8 @@ type XNet struct {
 var once sync.Once
 
 // 初始化XNet
+// 初始化时选择需要装载的路由器和HTTP Server
+// 根据不同的装载内容产生不同的特性
 func Init(server server.Blueprint, router router.Blueprint) {
 	once.Do(func() {
 		logger.Debug("init xnet server and router...")

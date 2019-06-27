@@ -16,9 +16,9 @@ package static
 
 import (
 	"xusi-projects/xusi-framework/core/asset"
+	"xusi-projects/xusi-framework/core/net/context"
+	"xusi-projects/xusi-framework/core/net/httplibs"
 	"xusi-projects/xusi-framework/xnet"
-	"xusi-projects/xusi-framework/xnet/context"
-	"xusi-projects/xusi-framework/xnet/httplibs"
 )
 
 // 初始化图片资源

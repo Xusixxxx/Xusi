@@ -17,15 +17,15 @@ package xdoc
 import (
 	"xusi-projects/xusi-framework/core/asset"
 	"xusi-projects/xusi-framework/core/logger"
+	"xusi-projects/xusi-framework/core/net/context"
+	xrouter "xusi-projects/xusi-framework/core/net/router"
+	"xusi-projects/xusi-framework/core/net/router/product/audrey"
+	"xusi-projects/xusi-framework/core/net/server"
+	"xusi-projects/xusi-framework/core/net/server/product/amanda"
 	"xusi-projects/xusi-framework/xdoc/model"
 	"xusi-projects/xusi-framework/xdoc/static"
 	"xusi-projects/xusi-framework/xdoc/xdoc_util"
 	"xusi-projects/xusi-framework/xnet"
-	"xusi-projects/xusi-framework/xnet/context"
-	xrouter "xusi-projects/xusi-framework/xnet/router"
-	"xusi-projects/xusi-framework/xnet/router/product/audrey"
-	"xusi-projects/xusi-framework/xnet/server"
-	"xusi-projects/xusi-framework/xnet/server/product/amanda"
 )
 
 // 文档字典

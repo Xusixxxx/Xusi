@@ -12,17 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package amanda
 
 import (
+	"errors"
 	"xusi-projects/xusi-framework/core/logger"
-	"xusi-projects/xusi-framework/core/net/server/basic"
-	"xusi-projects/xusi-framework/xdoc"
-	"xusi-projects/xusi-framework/xnet"
+	basic2 "xusi-projects/xusi-framework/core/net/server/basic"
 )
 
-func main() {
-	logger.Conf.Disable = true
-	xnet.RunMode(basic.RUN_MODE_PROD)
-	xdoc.Run("9999")
+func (amanda *Amanda) Run(params []string) {
+	runAdapter(params)
+	listen()
+}
+
+func (amanda *Config) RunMode(mode []string) string {
+	if len(mode) > 0 {
+		if mode[0] == basic2.RUN_MODE_DEV || mode[0] == basic2.RUN_MODE_PROD {
+			amanda.Config.RunMode = mode[0]
+		} else {
+			logger.Error(errors.New("error run mode type : " + mode[0] + "\n" + "only allow dev(basic.RUN_MODE_DEV) or prod(basic.RUN_MODE_PROD)"))
+		}
+	}
+	return amanda.Config.RunMode
 }

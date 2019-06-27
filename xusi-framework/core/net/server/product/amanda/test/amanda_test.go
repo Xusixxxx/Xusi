@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package test
 
 import (
-	"xusi-projects/xusi-framework/core/logger"
-	"xusi-projects/xusi-framework/core/net/server/basic"
-	"xusi-projects/xusi-framework/xdoc"
-	"xusi-projects/xusi-framework/xnet"
+	"fmt"
+	"testing"
+	"xusi-projects/xusi-framework/core/net/server"
+	amanda2 "xusi-projects/xusi-framework/core/net/server/product/amanda"
 )
 
-func main() {
-	logger.Conf.Disable = true
-	xnet.RunMode(basic.RUN_MODE_PROD)
-	xdoc.Run("9999")
+func TestRunAdapter(t *testing.T) {
+	fmt.Println(amanda2.Load().Config.Port)
+	server.Run(amanda2.Load(), "8011")
+	fmt.Println(amanda2.Load().Config.Port)
 }

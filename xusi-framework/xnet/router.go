@@ -15,9 +15,9 @@
 package xnet
 
 import (
-	"xusi-projects/xusi-framework/xnet/context"
-	"xusi-projects/xusi-framework/xnet/router"
-	"xusi-projects/xusi-framework/xnet/router/basic"
+	"xusi-projects/xusi-framework/core/net/context"
+	"xusi-projects/xusi-framework/core/net/router"
+	"xusi-projects/xusi-framework/core/net/router/basic"
 )
 
 func (xnet XNet) AddRoute(pattern basic.Patterns, methods basic.Methods, functions basic.Functions) {

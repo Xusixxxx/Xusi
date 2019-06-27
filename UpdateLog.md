@@ -11,7 +11,8 @@
 1、完成XNet原始版本开发；
 2、完成amanda和audrey开发；
 3、取消默认路由"/"的注册，改为内置页面；
-4、优化SeverHandler处理函数。
+4、优化SeverHandler处理函数；
+5、调整项目结构，原有xnet移动至core；
 ```
 
 ##### 2019/06/23

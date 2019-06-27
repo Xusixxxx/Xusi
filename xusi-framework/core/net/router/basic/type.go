@@ -12,17 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package basic
 
 import (
-	"xusi-projects/xusi-framework/core/logger"
-	"xusi-projects/xusi-framework/core/net/server/basic"
-	"xusi-projects/xusi-framework/xdoc"
-	"xusi-projects/xusi-framework/xnet"
+	"xusi-projects/xusi-framework/core/net/context"
 )
 
-func main() {
-	logger.Conf.Disable = true
-	xnet.RunMode(basic.RUN_MODE_PROD)
-	xdoc.Run("9999")
-}
+type Patterns []string
+type Methods []string
+type Functions []func(*context.Context)
