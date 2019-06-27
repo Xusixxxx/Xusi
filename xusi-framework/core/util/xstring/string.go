@@ -23,6 +23,18 @@ import (
 )
 
 /* XusiFunc ->
+    @describe 获取去除最后一个字符后的字符串
+    @param str string 需要处理的字符串
+<- End */
+func GetLast(str string) string {
+	if len(str) > 1 {
+		return string([]byte(str)[0 : len(str)-1])
+	} else {
+		return ""
+	}
+}
+
+/* XusiFunc ->
     @describe 根据左边和右边的内容，获取指定字符串两者中间的内容，如果没找到则返回空字符串
     @param str string 需要查找的字符串
     @param start string 左边的标识符

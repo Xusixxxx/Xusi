@@ -14,5 +14,55 @@
 
 package hermosa
 
+import (
+	"errors"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
+	"xusi-projects/xusi-framework/core/net/client/basic"
+	"xusi-projects/xusi-framework/core/net/client/util"
+	"xusi-projects/xusi-framework/core/net/httplibs"
+)
+
 type Hermosa struct {
+	*basic.Client
+	HttpClient *http.Client // HTTP客户端
+}
+
+// 发起HTTP请求
+func (hermosa *Hermosa) HTTP(method string, xurl string, header map[string]string, data map[string]string) ([]byte, error) {
+	// method转大写
+	method = strings.ToUpper(method)
+	// 变量初始化
+	var response *http.Response
+	var reader *strings.Reader
+	// 配置请求信息
+	switch method {
+	case httplibs.METHOD_GET:
+		response, err := http.Get(xurl + "?" + util.HttpDataMapAnalysis(data))
+		if err != nil {
+			return nil, err
+		}
+	default:
+
+	}
+
+	if err != nil {
+		// handle error
+	}
+
+	response.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	response.Header.Set("Cookie", "name=anny")
+
+	resp, err := hermosa.HttpClient.Do(response)
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		// handle error
+	}
+
+	fmt.Println(string(body))
 }

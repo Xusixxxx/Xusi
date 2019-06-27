@@ -12,12 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package client
+package basic
 
-// 网络客户端设计蓝图
-// 可根据蓝图拓展出HTTP Client、Socket Client等客户端
-// Xusixxxx希望的所有作为Client的这种工具内容都不应该为一次性使用，那么蓝图的设计就应该围绕几点
-// 应该保持工具的可复用，而不是用一次购买一次，应该是我买十个工具，那么在一个工具被使用时，我可以选择其他的工具来使用，使用结束又放回
-// 在工具使用前，应该可以自行创建一些插件来改变工具的使用状态
-type Blueprint interface {
+type Channel struct {
 }
