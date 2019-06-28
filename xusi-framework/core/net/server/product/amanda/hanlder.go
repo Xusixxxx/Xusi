@@ -16,8 +16,8 @@ package amanda
 
 import (
 	"net/http"
-	"reflect"
 	"strconv"
+	"xusi-projects/xusi-framework/core/channel/product/chloe"
 	"xusi-projects/xusi-framework/core/logger"
 	"xusi-projects/xusi-framework/core/net/context"
 	"xusi-projects/xusi-framework/core/net/httplibs"
@@ -30,6 +30,11 @@ import (
 // 请求处理者
 type requestHandler struct {
 	*context.Context
+	execFunc func(*context.Context) // 并发处理池
+}
+
+func (requestHanlder *requestHandler) Exec() {
+	requestHanlder.execFunc(requestHanlder.Context)
 }
 
 // 请求初始化
@@ -55,10 +60,10 @@ func (requestHandler *requestHandler) ServeHTTP(responseWriter http.ResponseWrit
 	}
 	// 执行路由处理函数
 	for _, function := range functions {
-		work := Job{serload: Serload{pri: reflect.TypeOf(function).String()}}
-		function(requestHandler.Context)
-		JobQueue <- work
+		requestHandler.execFunc = function
+		chloe.Load().AddTask(requestHandler)
 	}
+	chloe.Load().Run()
 	// 处理请求结果信息
 	requestHandler.requestEndInfo(len(functions))
 }

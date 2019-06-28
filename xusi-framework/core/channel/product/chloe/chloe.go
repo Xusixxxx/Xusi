@@ -31,7 +31,7 @@ type Chloe struct {
 func (chloe Chloe) Run() {
 	//启动所有的Worker
 	for i := 0; i < channel.Config.MaxTaskFactoryNumber; i++ {
-		taskFactory := basic.CreaTaskFactory(chloe.TaskPool, chloe.Result, i)
+		taskFactory := basic.CreateTaskFactory(chloe.TaskPool, chloe.Result, i)
 		chloe.TaskFactoryList = append(chloe.TaskFactoryList, taskFactory)
 		taskFactory.Start()
 	}

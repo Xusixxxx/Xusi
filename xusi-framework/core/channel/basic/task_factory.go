@@ -14,8 +14,6 @@
 
 package basic
 
-import "fmt"
-
 // 任务处理工厂结构
 type TaskFactory struct {
 	id          int                 // 工作id
@@ -26,7 +24,7 @@ type TaskFactory struct {
 }
 
 // 创建一个任务工厂
-func CreaTaskFactory(workerPool chan chan Task, result map[interface{}]int, id int) TaskFactory {
+func CreateTaskFactory(workerPool chan chan Task, result map[interface{}]int, id int) TaskFactory {
 	return TaskFactory{
 		id:          id,
 		WorkPool:    workerPool,
@@ -47,8 +45,7 @@ func (taskFactory TaskFactory) Start() {
 			// 从任务通道中获取到任务进行处理，任务在处理期间由于TaskChannel为同步通道，会进行阻塞
 			case task := <-taskFactory.TaskChannel:
 				// 收到任务处理通知，开始处理
-				task.TaskStruct = "ok"
-				fmt.Println(task.TaskStruct)
+				task.TaskImpl.Exec()
 			// 当收到任务终止的消息
 			case <-taskFactory.quit:
 				return

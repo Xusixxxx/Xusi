@@ -16,14 +16,15 @@ package basic
 
 // 需要处理的任务数据类型
 type Task struct {
-	TaskStruct TaskImpl // 任务结构
+	TaskImpl // 任务结构
 }
 
 // 任务需要满足接口
 type TaskImpl interface {
+	Exec() // 执行
 }
 
 // 创建任务
-func CreateTask(taskStruct TaskImpl) Task {
-	return Task{TaskStruct: taskStruct}
+func CreateTask(taskImpl TaskImpl) Task {
+	return Task{TaskImpl: taskImpl}
 }
