@@ -6,6 +6,13 @@
 - 修订：Xusixxxx(xusixxxx@gmail.com)
 ****
 
+##### 2019/06/28
+```sh
+1、完成Chloe任务处理工厂的开发；
+2、更改Amanda HTTP Server路由处理函数分发装置为Chloe；
+3、新建Hermosa Http Client项目。
+```
+
 ##### 2019/06/25
 ```sh
 1、完成XNet原始版本开发；
