@@ -23,6 +23,7 @@ import (
 	"strconv"
 	"xusi-projects/xusi-framework/core/logger"
 	"xusi-projects/xusi-framework/core/net/httplibs"
+	"xusi-projects/xusi-framework/core/util/xstring"
 )
 
 /* XusiStrcut ->
@@ -44,7 +45,7 @@ func (ctx *Context) XWriteString(content string) {
 	}
 	i, err := ctx.ResponseWriter.Write([]byte(content))
 	if err == nil {
-		logger.Debug("write data for " + strconv.Itoa(i) + " byte")
+		logger.Debug("write data for " + xstring.NumberFormat(strconv.Itoa(i)) + " byte")
 	} else {
 		logger.Warn(err)
 	}
@@ -62,7 +63,7 @@ func (ctx *Context) XWriteJSON(value interface{}) {
 	json, err := json.Marshal(value)
 	if err == nil {
 		i, err := ctx.ResponseWriter.Write(json)
-		logger.Debug("write data for " + strconv.Itoa(i) + "byte")
+		logger.Debug("write data for " + xstring.NumberFormat(strconv.Itoa(i)) + "byte")
 		if err != nil {
 			logger.Error(err)
 		}
