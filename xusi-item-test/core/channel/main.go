@@ -25,9 +25,9 @@ type TestStruct struct {
 }
 
 func (m *TestStruct) Exec() {
-	m.result = "Hello!"
 	for i := 0; i < 9999999999; i++ {
-		fmt.Println(m.result, i)
+		fmt.Println("任务1处理第", i, "次")
+		time.Sleep(1000 * time.Millisecond)
 	}
 }
 
@@ -36,9 +36,9 @@ type TestStruct2 struct {
 }
 
 func (m *TestStruct2) Exec() {
-	m.result = "Hello!233"
 	for i := 0; i < 9999999999; i++ {
-		fmt.Println(m.result, i)
+		fmt.Println("任务2处理第", i, "次")
+		time.Sleep(1000 * time.Millisecond)
 	}
 }
 
@@ -50,7 +50,8 @@ func main() {
 	chloe.Load().Run()
 
 	for i := 0; i < 9999999999; i++ {
-		fmt.Println(v1.result, v2.result, i)
+		fmt.Println("主线程任务处理第", i, "次")
+		time.Sleep(1000 * time.Millisecond)
 	}
 
 	time.Sleep(1000 * time.Minute)

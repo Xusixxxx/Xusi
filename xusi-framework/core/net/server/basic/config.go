@@ -12,11 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/* XusiPackage ->
+    @describe Server根基，这包含了所有符合Xusi设计的Server都应该拥有的一些特性
+<- End */
 package basic
 
+/* XusiStrcut ->
+   @describe Xusi Server Config根基
+*/
 type Config struct {
-	Network string // 网络类型
-	Address string // 地址
-	Port    int    // 端口
-	RunMode string // 运行模式
-}
+	Network string // $describe 网络类型
+	Address string // $describe 地址
+	Port    int    // $describe 端口
+	RunMode string // $describe 运行模式
+} // -< End

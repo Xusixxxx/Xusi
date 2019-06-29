@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /* XusiPackage ->
-    @describe 路由器(奥德丽)，完美主义的她希望任何事都做到极致，她会找到指定路由地址下所有允许的内容
+    @describe 一个符合Xusi设计概念的路由器(奥德丽)，完美主义的她希望任何事都做到极致，她会找到指定路由地址下所有允许的内容
 <- End */
 package audrey
 
@@ -22,7 +22,7 @@ import (
 )
 
 /* XusiStrcut ->
-   @describe 路由器结构
+   @describe 路由器(奥德丽)结构
 */
 type Audrey struct {
 	*basic2.Router

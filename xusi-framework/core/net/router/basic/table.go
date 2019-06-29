@@ -14,15 +14,17 @@
 
 package basic
 
-// 路由器表成员结构
+/* XusiStrcut ->
+   @describe 路由表成员，符合Xusi设计概念的路由器表成员结构模型
+*/
 type RouteTableItem struct {
-	Patterns  Patterns  // 映射的地址
-	Methods   Methods   // 接受的方法类型
-	Functions Functions // 路由处理的函数
-}
+	Patterns  Patterns  // $describe 映射的地址
+	Methods   Methods   // $describe 接受的方法类型
+	Functions Functions // $describe 路由处理的函数
+} // -< End
 
 /* XusiFunc ->
-    @describe 检查该路由成员是否为空
+    @describe 检查该路由成员是否为无效成员
 <- End */
 func (routeTableItem RouteTableItem) IsNil() bool {
 	return len(routeTableItem.Methods) == 0 && len(routeTableItem.Functions) == 0 && len(routeTableItem.Patterns) == 0

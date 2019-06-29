@@ -14,5 +14,8 @@
 
 package basic
 
+/* XusiStrcut ->
+   @describe 符合Xusi设计的Server基本结构
+*/
 type Server struct {
-}
+} // -< End

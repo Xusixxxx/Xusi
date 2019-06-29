@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/* XusiPackage ->
+    @describe 路由器的根基，包含了一个符合Xusi设计概念的路由器的通用基础功能
+<- End */
 package basic
 
 import (
@@ -27,6 +30,12 @@ import (
 // 多对多对多
 // 一个路由可以允许多种请求方法，可以指向多个处理函数(指向的处理函数可拓展权重)
 // 多个路由可以允许多种请求方法，并且指向一个或多个处理函数(指向的处理函数可拓展权重)
+/* XusiFunc ->
+    @describe 将路由添加到路由器中，该路由允许多个路由地址多赢多个允许的请求方法类型，并且允许拥有多个处理函数
+    @param patterns Patterns 路由地址数组
+    @param methods Methods 路由允许的方法类型数组
+    @param functions Functions 路由处理函数数组
+<- End */
 func (router *Router) AddRoute(patterns Patterns, methods Methods, functions Functions) {
 	for _, pattern := range patterns {
 		router.RLock()

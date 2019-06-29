@@ -18,8 +18,10 @@ import (
 	"sync"
 )
 
-// 路由器结构
+/* XusiStrcut ->
+   @describe 符合Xusi设计概念的路由器结构模型
+*/
 type Router struct {
-	sync.RWMutex                           // 读写锁(通常用于守护路由器内部读写安全)
-	Table        map[string]RouteTableItem // 通用基础路由表
-}
+	sync.RWMutex                           // $describe 读写锁(通常用于守护路由器内部读写安全)
+	Table        map[string]RouteTableItem // $describe 通用基础路由表
+} // -< End

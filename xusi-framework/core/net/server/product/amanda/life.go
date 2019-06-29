@@ -38,6 +38,9 @@ func init() {
 	}
 }
 
+/* XusiFunc ->
+    @describe 获取Amanda实例
+<- End */
 func Load() *Amanda {
 	return server
 }

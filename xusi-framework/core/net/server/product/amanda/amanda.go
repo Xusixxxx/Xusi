@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/* XusiPackage ->
+    @describe 一个符合Xusi设计概念的Server（阿曼达），她仅是一个寻常的HTTP Server
+<- End */
 package amanda
 
 import (
@@ -22,12 +25,15 @@ import (
 	basic2 "xusi-projects/xusi-framework/core/net/server/basic"
 )
 
+/* XusiStrcut ->
+   @describe Amanda结构
+*/
 type Amanda struct {
 	*basic2.Server
 	*Config
-	HttpServer *http.Server    // 网络请求接收中心
-	Handlers   *requestHandler // 网络请求处理者
-}
+	HttpServer *http.Server    // $describe 网络请求接收中心
+	Handlers   *requestHandler // $describe 网络请求处理者
+} // -< End
 
 // 启动监听
 func (amanda Amanda) listen() {

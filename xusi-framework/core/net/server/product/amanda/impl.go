@@ -20,11 +20,19 @@ import (
 	basic2 "xusi-projects/xusi-framework/core/net/server/basic"
 )
 
+/* XusiFunc ->
+    @describe 运行Amanda
+    @param params []string 运行参数
+<- End */
 func (amanda *Amanda) Run(params []string) {
-	runAdapter(params)
-	listen()
+	amanda.runAdapter(params)
+	amanda.listen()
 }
 
+/* XusiFunc ->
+    @describe 获取或设置Amanda的运行模式，如果不传参则为获取
+    @param mode []string 运行模式
+<- End */
 func (amanda *Config) RunMode(mode []string) string {
 	if len(mode) > 0 {
 		if mode[0] == basic2.RUN_MODE_DEV || mode[0] == basic2.RUN_MODE_PROD {

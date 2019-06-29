@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/* XusiPackage ->
+    @describe 对HTTP Request和ResponseWriter进行封装
+<- End */
 package context
 
 import (
@@ -19,6 +22,7 @@ import (
 	"net/http"
 	"strconv"
 	"xusi-projects/xusi-framework/core/logger"
+	"xusi-projects/xusi-framework/core/net/httplibs"
 )
 
 /* XusiStrcut ->
@@ -35,12 +39,14 @@ type Context struct {
     @param content string 字符串
 <- End */
 func (ctx *Context) XWriteString(content string) {
-	ctx.ResponseWriter.WriteHeader(ctx.StatusCode)
+	if ctx.StatusCode != httplibs.CODE_200 {
+		ctx.ResponseWriter.WriteHeader(ctx.StatusCode)
+	}
 	i, err := ctx.ResponseWriter.Write([]byte(content))
 	if err == nil {
 		logger.Debug("write data for " + strconv.Itoa(i) + " byte")
 	} else {
-		logger.Error(err)
+		logger.Warn(err)
 	}
 }
 
@@ -50,7 +56,9 @@ func (ctx *Context) XWriteString(content string) {
 <- End */
 func (ctx *Context) XWriteJSON(value interface{}) {
 	ctx.ResponseWriter.Header().Set("Content-type", "application/json;charset=UTF-8")
-	ctx.ResponseWriter.WriteHeader(ctx.StatusCode)
+	if ctx.StatusCode != httplibs.CODE_200 {
+		ctx.ResponseWriter.WriteHeader(ctx.StatusCode)
+	}
 	json, err := json.Marshal(value)
 	if err == nil {
 		i, err := ctx.ResponseWriter.Write(json)
@@ -59,6 +67,6 @@ func (ctx *Context) XWriteJSON(value interface{}) {
 			logger.Error(err)
 		}
 	} else {
-		logger.Error(err)
+		logger.Warn(err)
 	}
 }

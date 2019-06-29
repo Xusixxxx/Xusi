@@ -29,7 +29,9 @@ func init() {
 	}
 }
 
-// 装载路由器，取到实例
+/* XusiFunc ->
+    @describe 获取到Audrey路由器的实例
+<- End */
 func Load() *Audrey {
 	return router
 }

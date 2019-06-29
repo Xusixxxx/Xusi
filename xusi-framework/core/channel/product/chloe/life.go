@@ -33,6 +33,7 @@ func init() {
 		Result:    map[interface{}]int{},
 		taskQueue: make(chan basic.Task, 2*maxTaskFactoryNumber),
 	}
+	channel.Run()
 }
 
 func Load() *Chloe {

@@ -6,6 +6,14 @@
 - 修订：Xusixxxx(xusixxxx@gmail.com)
 ****
 
+##### 2019/06/30
+```sh
+1、优化Chloe初始化模式；
+2、优化Amanda性能；
+3、解决Amanda结合Chloe发生的严重丢包BUG；
+4、解决xdoc控制台日志乱码BUG；
+```
+
 ##### 2019/06/28
 ```sh
 1、完成Chloe任务处理工厂的开发；

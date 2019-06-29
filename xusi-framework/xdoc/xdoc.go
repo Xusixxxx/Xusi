@@ -21,6 +21,7 @@ import (
 	xrouter "xusi-projects/xusi-framework/core/net/router"
 	"xusi-projects/xusi-framework/core/net/router/product/audrey"
 	"xusi-projects/xusi-framework/core/net/server"
+	"xusi-projects/xusi-framework/core/net/server/basic"
 	"xusi-projects/xusi-framework/core/net/server/product/amanda"
 	"xusi-projects/xusi-framework/xdoc/model"
 	"xusi-projects/xusi-framework/xdoc/static"
@@ -32,6 +33,7 @@ import (
 var Docs = map[string]model.PackageModel{}
 
 func init() {
+	logger.Conf.Mode = basic.RUN_MODE_PROD
 	xnet.Init(server.Blueprint(amanda.Load()), xrouter.Blueprint(audrey.Load()))
 	static.InitImage()
 }
@@ -65,14 +67,10 @@ func Run(port string) {
 
 // 生成文档路由
 func router() {
-	// 根路由
-	root := "/"
-
 	// 加载目录
-	xnet.Load().Get(root, func(ctx *context.Context) {
+	xnet.Load().Get("/", func(ctx *context.Context) {
 		page := RenderContent(static.PAGE_DOC)
 		page = RenderSidebar(page)
-
 		ctx.XWriteString(page)
 	})
 }

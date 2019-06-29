@@ -17,5 +17,5 @@
 // 这个工作池需要能够接收任何类型的任务
 package channel
 
-type Blueprint struct {
+type Blueprint interface {
 }

@@ -19,27 +19,14 @@ import (
 	"xusi-projects/xusi-framework/core/util/xurl"
 )
 
-// 该路由器将直接返回所有找到的处理函数
+/* XusiFunc ->
+    @describe 找到符合要求的路由处理函数
+    @param ctx *context.Context HTTP Request和ResponseWriter的封装结构
+<- End */
 func (audrey *Audrey) Find(ctx *context.Context) []func(*context.Context) {
 	routeTableItem := audrey.Router.Table[xurl.UrlDecoder(ctx.URL.String())]
 	if !routeTableItem.IsNil() {
 		return routeTableItem.Functions
-	} else {
-		return nil
-	}
-}
-
-// 如果找到的函数仅有一个，直接返回
-// 如果找到的函数有多个，则返回其中一个
-func (audrey *Audrey) FindTODO(ctx *context.Context) []func(*context.Context) {
-	routeTableItem := audrey.Router.Table[xurl.UrlDecoder(ctx.URL.String())]
-	if !routeTableItem.IsNil() {
-		if len(routeTableItem.Functions) == 1 {
-			return []func(*context.Context){routeTableItem.Functions[0]}
-		} else {
-			// TODO 权重算法
-
-		}
 	} else {
 		return nil
 	}

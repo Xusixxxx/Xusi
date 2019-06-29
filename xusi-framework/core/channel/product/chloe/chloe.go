@@ -27,7 +27,7 @@ type Chloe struct {
 	TaskFactoryList []basic.TaskFactory  // 任务工厂列表（主要用于停止任务）
 }
 
-// 开始执行所有任务
+// 运行Chloe
 func (chloe Chloe) Run() {
 	//启动所有的Worker
 	for i := 0; i < channel.Config.MaxTaskFactoryNumber; i++ {
@@ -54,9 +54,9 @@ func (chloe Chloe) dispatch() {
 }
 
 // 添加任务到任务通道
-func (chloe Chloe) AddTask(task basic.TaskImpl) {
+func (chloe Chloe) AddTask(task basic.TaskImpl, wait ...chan int) {
 	// 向任务通道发送任务
-	chloe.taskQueue <- basic.CreateTask(task)
+	chloe.taskQueue <- basic.CreateTask(task, wait...)
 }
 
 //停止所有任务

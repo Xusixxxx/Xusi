@@ -30,9 +30,12 @@ import (
 // 请求处理者
 type requestHandler struct {
 	*context.Context
-	execFunc func(*context.Context) // 并发处理池
+	execFunc func(*context.Context) // 即将开始执行的处理函数
 }
 
+/* XusiFunc ->
+    @describe 执行请求处理者中已准备好的函数
+<- End */
 func (requestHanlder *requestHandler) Exec() {
 	requestHanlder.execFunc(requestHanlder.Context)
 }
@@ -49,6 +52,11 @@ func (requestHandler *requestHandler) init(responseWriter http.ResponseWriter, r
 }
 
 // HTTP请求招待
+/* XusiFunc ->
+    @describe 接待HTTP请求，对所有请求进行统一处理
+    @param responseWriter http.ResponseWriter 响应流
+    @param request *http.Request 请求体
+<- End */
 func (requestHandler *requestHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 	// 对请求进行初始化
 	requestHandler.init(responseWriter, request)
@@ -59,13 +67,25 @@ func (requestHandler *requestHandler) ServeHTTP(responseWriter http.ResponseWrit
 		requestHandler.StatusCode = httplibs.CODE_404
 	}
 	// 执行路由处理函数
+	wait := make(chan int)
+	taskCount := 0
 	for _, function := range functions {
+		// 配置即将处理的函数
 		requestHandler.execFunc = function
-		chloe.Load().AddTask(requestHandler)
+		// 向chloe中添加任务，进行多线程异步处理
+		// 避免处理函数还未执行完毕父线程就销毁导致变量丢失
+		chloe.Load().AddTask(requestHandler, wait)
 	}
-	chloe.Load().Run()
 	// 处理请求结果信息
 	requestHandler.requestEndInfo(len(functions))
+
+	// 任务处理完毕，进入收尾工作
+	for x := range wait {
+		taskCount += x
+		if taskCount >= len(functions) {
+			break
+		}
+	}
 }
 
 // 处理请求结束信息

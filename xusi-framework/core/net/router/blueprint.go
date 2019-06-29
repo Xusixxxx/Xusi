@@ -48,8 +48,15 @@ type Blueprint interface {
 	All(string, func(*context.Context))
 }
 
-func AddRoute(blueprint Blueprint, pattern basic2.Patterns, methods basic2.Methods, functions basic2.Functions) {
-	blueprint.AddRoute(pattern, methods, functions)
+/* XusiFunc ->
+    @describe 对传入的符合蓝图设计的路由器中添加路由信息
+    @param blueprint Blueprint 符合路由蓝图设计的路由器
+    @param patterns basic.Patterns 路由地址数组
+    @param methods basic.Methods 路由允许的方法类型数组
+    @param functions basic.Functions 路由处理函数数组
+<- End */
+func AddRoute(blueprint Blueprint, patterns basic2.Patterns, methods basic2.Methods, functions basic2.Functions) {
+	blueprint.AddRoute(patterns, methods, functions)
 }
 
 func Add(blueprint Blueprint, patterns basic2.Patterns, methods basic2.Methods, function func(*context.Context)) {

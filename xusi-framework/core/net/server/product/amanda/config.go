@@ -18,6 +18,9 @@ import (
 	basic2 "xusi-projects/xusi-framework/core/net/server/basic"
 )
 
+/* XusiStrcut ->
+   @describe Amanda配置器结构
+*/
 type Config struct {
 	*basic2.Config
-}
+} // -< End

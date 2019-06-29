@@ -15,14 +15,13 @@
 package main
 
 import (
-	"xusi-projects/xusi-framework/core/logger"
 	"xusi-projects/xusi-framework/core/net/server/basic"
 	"xusi-projects/xusi-framework/xdoc"
 	"xusi-projects/xusi-framework/xnet"
 )
 
 func main() {
-	logger.Conf.Disable = true
+	//logger.Conf.Disable = true
 	xnet.RunMode(basic.RUN_MODE_PROD)
 	xdoc.Run("9999")
 }

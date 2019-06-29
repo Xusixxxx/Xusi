@@ -46,6 +46,10 @@ func (taskFactory TaskFactory) Start() {
 			case task := <-taskFactory.TaskChannel:
 				// 收到任务处理通知，开始处理
 				task.TaskImpl.Exec()
+				// 执行结束返回等待消息
+				if task.isWait {
+					task.Wait <- 1
+				}
 			// 当收到任务终止的消息
 			case <-taskFactory.quit:
 				return

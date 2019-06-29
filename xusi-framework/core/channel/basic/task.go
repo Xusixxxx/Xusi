@@ -16,7 +16,9 @@ package basic
 
 // 需要处理的任务数据类型
 type Task struct {
-	TaskImpl // 任务结构
+	TaskImpl          // 任务结构
+	Wait     chan int // 等待chan
+	isWait   bool     // 是否需要等待
 }
 
 // 任务需要满足接口
@@ -24,7 +26,11 @@ type TaskImpl interface {
 	Exec() // 执行
 }
 
-// 创建任务
-func CreateTask(taskImpl TaskImpl) Task {
-	return Task{TaskImpl: taskImpl}
+// 创建任务(分为是否需要等待执行完毕的任务)
+func CreateTask(taskImpl TaskImpl, wait ...chan int) Task {
+	if len(wait) >= 1 {
+		return Task{TaskImpl: taskImpl, Wait: wait[0], isWait: true}
+	} else {
+		return Task{TaskImpl: taskImpl, isWait: false}
+	}
 }
