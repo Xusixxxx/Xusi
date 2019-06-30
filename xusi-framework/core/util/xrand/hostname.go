@@ -12,20 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package xrand
 
 import (
-	"fmt"
-	"xusi-projects/xusi-framework/core/util/xrand"
+	"math/rand"
 )
 
-func main() {
-	i := 0
-	for true {
-		i++
-		if i == 100 {
-			return
-		}
-		fmt.Println(xrand.CreateName())
+/* XusiFunc ->
+    @describe 随机生成Host Name
+<- End */
+func HostName() string {
+	str := "0123456789abcdefghijklmnopqrstuvwxyz"
+	bytes := []byte(str)
+	hostname := []byte{}
+	r := rand.New(rand.NewSource(RandInt64(0, 999999)))
+	for i := 0; i < 12; i++ {
+		hostname = append(hostname, bytes[r.Intn(len(bytes))])
 	}
+	return string(hostname)
+
 }
